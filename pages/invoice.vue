@@ -236,15 +236,15 @@ export default {
             invoiceData: [
                 {
                     name: 'Distribuidora',
-                    value: 'ENEL'
+                    value: 'ENERGISA'
                 },
                 {
                     name: 'Vencimento',
-                    value: '14/09/2022'
+                    value: '20/09/2022'
                 },
                 {
                     name: 'Valor',
-                    value: 'R$200,00'
+                    value: 'R$363,04'
                 },
             ],
             months: [
@@ -308,11 +308,11 @@ export default {
             ucData: [
                 {
                     name: 'Nº instalação',
-                    value: '10773075'
+                    value: '940259574'
                 },
                 {
                     name: 'Início vigência',
-                    value: '13/01/2022'
+                    value: '01/10/2022'
                 }
             ],
             rules: [

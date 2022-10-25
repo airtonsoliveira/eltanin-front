@@ -1,6 +1,9 @@
 <template>
   <v-row justify="center" align="center" class="mt-6">
     <v-col cols=4>
+      <ApiUserGet
+        @done="onDoneHello"
+      ></ApiUserGet>
       <v-card color="#EAECFF" height="600px">
         <v-row align="center" class="pa-4 fill-height">
           <v-col class="subtitle-1 text-center black--text">
@@ -48,7 +51,8 @@
         </v-row>
         <v-row justify="center">
           <v-col class="pb-10" cols="4">
-            <v-btn block outlined text class="text-none" color="primary" height="50px" style="background-color: #fff" nuxt to="/userRegistration?nada=nada">
+            <v-btn block outlined text class="text-none" color="primary" height="50px" style="background-color: #fff"
+              nuxt to="/userRegistration?nada=nada">
               Cadastrar-se
             </v-btn>
           </v-col>
@@ -80,10 +84,10 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="px-8" cols=12 v-for="unity in unitys" v-bind:key="unity.name">
+          <v-col class="px-8" cols=12 v-for="unit in units" v-bind:key="unit.name">
             <v-card tile>
               <v-card-title>
-                {{ unity.type }}: {{ unity.name }}
+                {{ unit.type }}: {{ unit.name }}
               </v-card-title>
             </v-card>
           </v-col>
@@ -98,7 +102,7 @@ import swal from 'sweetalert2'
 export default {
   name: 'IndexPage',
 
-  data () {
+  data() {
     return {
       showPassword: false,
       loggedIn: false,
@@ -106,14 +110,15 @@ export default {
         email: null,
         password: null
       },
-      unitys: [
+      hello: null,
+      units: [
         {
           type: 'UC',
-          name: 'UC1'
+          name: 'Pedro X'
         },
         {
           type: 'UG',
-          name: 'UG1'
+          name: 'Consorcio X'
         }
       ]
     }
@@ -126,12 +131,17 @@ export default {
   },
 
   methods: {
-    authenticate () {
-      if(this.formData.email === 'ton020500@gmail.com' && this.formData.password === 'exemplo') {
+    authenticate() {
+      if (this.formData.email === 'ton020500@gmail.com' && this.formData.password === 'exemplo') {
         this.loggedIn = true
       } else {
         new swal('Credenciais incorretas', 'Verificar usuário e senha', 'error')
       }
+    },
+
+    onDoneHello(data){
+      console.log(data)
+      this.hello = data?.data
     }
   }
 }

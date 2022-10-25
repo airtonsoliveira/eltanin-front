@@ -48,7 +48,7 @@
         </v-row>
         <v-row>
             <v-col>
-                UC1
+                UC Pedro
             </v-col>
         </v-row>
         <v-divider></v-divider>
@@ -87,61 +87,26 @@ export default {
         return {
             months: [
                 {
-                   yearMonth: 202109,
-                   generated: 20,
-                   compensated: 120,
-                   notCompensated: 20,
-                   exceeded: 1
-                },
-                {
-                   yearMonth: 202110,
-                   generated: 30,
-                   compensated: 2,
+                   yearMonth: 202208,
+                   generated: 4242 - 3741,
+                   compensated: 3741,
                    notCompensated: 0,
                    exceeded: 1
                 },
                 {
-                   yearMonth: 202111,
-                   generated: 20,
-                   compensated: 100,
-                   notCompensated: 20,
-                   exceeded: 0
-                },
-                {
-                   yearMonth: 202112,
-                   generated: 50,
-                   compensated: 100,
-                   notCompensated: 20,
-                   exceeded: 1
-                },
-                {
-                   yearMonth: 202201,
-                   generated: 200,
-                   compensated: 100,
-                   notCompensated: 20,
-                   exceeded: 1
-                },
-                {
-                   yearMonth: 202202,
-                   generated: 200,
-                   compensated: 10,
-                   notCompensated: 20,
-                   exceeded: 0
-                },
-                {
-                   yearMonth: 202203,
-                   generated: 20,
-                   compensated: 100,
-                   notCompensated: 20,
-                   exceeded: 0
-                },
-                {
-                   yearMonth: 202204,
-                   generated: 30,
-                   compensated: 70,
+                   yearMonth: 202209,
+                   generated: 5314 - 3433,
+                   compensated: 3433,
                    notCompensated: 0,
                    exceeded: 1
                 },
+                {
+                   yearMonth: 202210,
+                   generated: 5168 - 3792,
+                   compensated: 3792,
+                   notCompensated: 0,
+                   exceeded: 1
+                }
             ]
         }
     },

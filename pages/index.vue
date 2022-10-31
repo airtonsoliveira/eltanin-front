@@ -1,9 +1,7 @@
 <template>
   <v-row justify="center" align="center" class="mt-6">
     <v-col cols=4>
-      <ApiUserGet
-        @done="onDoneHello"
-      ></ApiUserGet>
+      <ApiUserGet @done="onDoneHello"></ApiUserGet>
       <v-card color="#EAECFF" height="600px">
         <v-row align="center" class="pa-4 fill-height">
           <v-col class="subtitle-1 text-center black--text">
@@ -52,7 +50,7 @@
         <v-row justify="center">
           <v-col class="pb-10" cols="4">
             <v-btn block outlined text class="text-none" color="primary" height="50px" style="background-color: #fff"
-              nuxt to="/userRegistration?nada=nada">
+              nuxt to="/signIn">
               Cadastrar-se
             </v-btn>
           </v-col>
@@ -139,7 +137,7 @@ export default {
       }
     },
 
-    onDoneHello(data){
+    onDoneHello(data) {
       console.log(data)
       this.hello = data?.data
     }

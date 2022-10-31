@@ -206,6 +206,7 @@
                             color="#3A416A"
                             class="text-none text-center title"
                             height="120px"
+                            to="/unit"
                         >
                             <v-icon large right>
                                 mdi-home-edit

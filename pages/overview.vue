@@ -85,6 +85,7 @@
                     color="#1E1E1E"
                     class="text-none text-center white--text"
                     height="100px"
+                    to="/invoiceInput"
                 >
                     <v-icon right large>
                         mdi-receipt-text-plus
@@ -101,6 +102,7 @@
                     color="#3A416A"
                     class="text-none text-center white--text"
                     height="100px"
+                    to="/unit"
                 >
                     <v-icon right large>
                         mdi-home-plus

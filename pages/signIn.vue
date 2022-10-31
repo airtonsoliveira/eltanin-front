@@ -16,7 +16,7 @@
                         </v-row>
                         <v-row justify="center">
                             <v-col cols="10">
-                                <v-text-field background-color="#fff" outlined label="E-mail"></v-text-field>
+                                <v-text-field background-color="#fff" outlined label="E-mail" type="email"></v-text-field>
                             </v-col>
                         </v-row>
                         <v-row justify="center">
@@ -26,7 +26,7 @@
                         </v-row>
                         <v-row justify="center">
                             <v-col cols="10">
-                                <v-text-field background-color="#fff" outlined label="CPF/CNPJ"></v-text-field>
+                                <v-text-field background-color="#fff" outlined label="CPF/CNPJ" type="text"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-col>
@@ -65,7 +65,7 @@
   
 <script>
 export default {
-    name: 'userRegistrationPage',
+    name: 'signInPage',
 
     data() {
         return {

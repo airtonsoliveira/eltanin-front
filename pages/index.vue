@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center" class="mt-6">
     <v-col cols=4>
-      <ApiUserGet @done="onDoneHello"></ApiUserGet>
+      <ApiUserGetById manualSubmit ref="apiUserId" :id="idUser" @done="onDoneUser"></ApiUserGetById>
       <v-card color="#EAECFF" height="600px">
         <v-row align="center" class="pa-4 fill-height">
           <v-col class="subtitle-1 text-center black--text">
@@ -108,7 +108,8 @@ export default {
         email: null,
         password: null
       },
-      hello: null,
+      idUser: null,
+      user: null,
       units: [
         {
           type: 'UC',
@@ -130,16 +131,19 @@ export default {
 
   methods: {
     authenticate() {
+      this.idUser = '1'
       if (this.formData.email === 'ton020500@gmail.com' && this.formData.password === 'exemplo') {
         this.loggedIn = true
       } else {
         new swal('Credenciais incorretas', 'Verificar usuário e senha', 'error')
       }
+      this.$nextTick(() => {
+        this.$refs.apiUserId?.submit()
+      })
     },
 
-    onDoneHello(data) {
-      console.log(data)
-      this.hello = data?.data
+    onDoneUser({ data }) {
+      this.user = data?.data
     }
   }
 }

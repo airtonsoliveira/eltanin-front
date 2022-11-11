@@ -3,7 +3,7 @@ import Vue from 'vue'
 import AxiosGetMixin from '@/mixins/axios/get.js'
 
 export default Vue.extend({
-    name: 'ApiUserGetById',
+    name: 'ApiInvoiceGetById',
 
     mixins: [AxiosGetMixin],
 
@@ -18,7 +18,7 @@ export default Vue.extend({
         id: {
             immediate: false,
             handler(val) {
-                this.url = `http://localhost:5500/user/${val}`
+                this.url = `http://localhost:5500/invoice/${val}`
             }
         }
     }

@@ -5,7 +5,7 @@ export default Vue.extend({
     mixins: [AxiosBaseMixin],
 
     methods: {
-        async submit () {
+        async submit() {
             this.loading = true
             let response
 

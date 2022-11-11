@@ -9,14 +9,14 @@ export default {
         }
     },
 
-    mounted () {
+    mounted() {
         if (!this.manualSubmit) {
             this.submit()
         }
     },
 
     methods: {
-        async submit () {
+        async submit() {
             this.loading = true
             let response
 

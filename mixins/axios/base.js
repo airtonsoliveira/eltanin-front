@@ -11,7 +11,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             data: undefined,
             error: undefined,
@@ -22,18 +22,18 @@ export default {
     },
 
     watch: {
-        loading (value) {
+        loading(value) {
             this.$emit('loading', value)
         }
     },
 
     methods: {
-        urlProxy (url) {
+        urlProxy(url) {
             return url
         }
     },
 
-    render (h) {
+    render(h) {
         const props = {
             data: this.data,
             error: this.error,

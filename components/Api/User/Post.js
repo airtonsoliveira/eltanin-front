@@ -1,11 +1,11 @@
 import Vue from 'vue'
 
-import AxiosGetMixin from '@/mixins/axios/get.js'
+import AxiosPostMixin from '@/mixins/axios/post.js'
 
 export default Vue.extend({
-    name: 'ApiUserGet',
+    name: 'ApiUserPost',
 
-    mixins: [AxiosGetMixin],
+    mixins: [AxiosPostMixin],
 
     created() {
         this.url = 'http://localhost:5500/user'

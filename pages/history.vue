@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-row class="mx-n14" style="backgroundcolor: #087890">
+		<v-row class="mx-n14" style="backgroundColor: #087890">
 			<v-col class="pl-14 white--text"> Histórico de Faturas </v-col>
 		</v-row>
 		<v-row align="center">
@@ -30,7 +30,7 @@
 			</v-col>
 		</v-row>
 		<v-row>
-			<v-col> UC Pedro </v-col>
+			<v-col> Pedro X </v-col>
 		</v-row>
 		<v-divider></v-divider>
 		<v-row>

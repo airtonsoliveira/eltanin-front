@@ -11,6 +11,7 @@
 					<ApiUserPost
 						ref="apiUserPost"
 						:variables="formData"
+                        @done="onDoneUserPost"
 					></ApiUserPost>
 					<v-col cols="6">
 						<v-row justify="center">
@@ -111,6 +112,8 @@
 </template>
   
 <script>
+import swal from 'sweetalert2';
+
 const initFormData = {
 	name: null,
 	email: null,
@@ -133,9 +136,15 @@ export default {
 
 	methods: {
 		onSubmit() {
-			this.$refs.apiUserPost?.submit();
-			this.$router.push("/");
+            this.onDoneUserPost()
+			//this.$refs.apiUserPost?.submit();
+			//this.$router.push("/");
 		},
+
+        onDoneUserPost() {
+            swal.fire('Error', 'Usuário já está cadastrado', 'error')
+            //swal.fire('Sucesso', 'Usuário cadastrado', 'success')
+        }
 	},
 };
 </script>

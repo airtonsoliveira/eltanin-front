@@ -11,7 +11,7 @@
 		>
 			<v-list>
 				<v-list-item
-					v-for="(page, i) in pages"
+					v-for="(page, i) in pagesShowed"
 					:key="i"
 					:to="page.path"
 					router
@@ -28,7 +28,7 @@
 		</v-navigation-drawer>
 		<v-app-bar
 			dark
-			style="backgroundcolor: #034a59"
+			style="backgroundColor:#034a59"
 			:clipped-left="true"
 			fixed
 			app
@@ -43,12 +43,12 @@
 			<v-toolbar-title class="pl-4" v-text="title" />
 			<v-spacer />
 		</v-app-bar>
-		<v-main style="backgroundcolor: #e9faff">
+		<v-main style="backgroundColor: #e9faff">
 			<v-container>
 				<Nuxt />
 			</v-container>
 		</v-main>
-		<v-footer dark style="backgroundcolor: #034a59" :absolute="false" app>
+		<v-footer dark style="backgroundColor: #034a59" :absolute="false" app>
 			<span>&copy; {{ new Date().getFullYear() }}</span>
 		</v-footer>
 	</v-app>
@@ -106,7 +106,7 @@ export default {
 
 	computed: {
 		loggedIn() {
-			return localStorage.getItem("token");
+			return this.$store.state.loggedIn
 		},
 	},
 

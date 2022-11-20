@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-row class="mx-n14" style="backgroundcolor: #087890">
+		<v-row class="mx-n14" style="backgroundColor: #087890">
 			<v-col class="pl-14 white--text"> Adicionar nova fatura </v-col>
 		</v-row>
 		<v-row>
@@ -8,10 +8,10 @@
 				<v-select
 					hide-details
 					solo
-					itemText="text"
+					itemText="name"
 					itemValue="value"
 					label="Unidade"
-					:items="optionsUnitType"
+					:items="optionsUnit"
 				>
 				</v-select>
 			</v-col>
@@ -24,7 +24,7 @@
 					itemText="text"
 					itemValue="value"
 					label="Distribuidora"
-					:items="optionsUnitType"
+					:items="optionsDistributor"
 				>
 				</v-select>
 			</v-col>
@@ -37,7 +37,7 @@
 					itemText="text"
 					itemValue="value"
 					label="Mês Referência"
-					:items="optionsUnitType"
+					:items="months"
 				>
 				</v-select>
 			</v-col>
@@ -45,12 +45,21 @@
 				<v-select
 					hide-details
 					solo
-					itemText="text"
+					itemText="value"
 					itemValue="value"
 					label="Ano Referência"
-					:items="optionsDistributor"
+					:items="years"
 				>
 				</v-select>
+			</v-col>
+		</v-row>
+        <v-row>
+			<v-col>
+				<v-file-input
+					solo
+					label="PDF da fatura"
+				>
+				</v-file-input>
 			</v-col>
 		</v-row>
 		<v-row>
@@ -79,6 +88,20 @@ export default {
 				{
 					text: "Energisa",
 					value: 2,
+				},
+			],
+            optionsUnit: [
+				{
+					type: "UC",
+					name: "Pedro X",
+				},
+				{
+					type: "UG",
+					name: "Consorcio X",
+				},
+                {
+					type: "UC",
+					name: "Unidade teste",
 				},
 			],
 			optionsUnitType: [
@@ -111,12 +134,73 @@ export default {
 					value: "01/10/2022",
 				},
 			],
-			rules: [
-				"Energia compensada deveria existir",
-				"Energia compensada maior que consumo",
-				"Injeção maior que consumo, porém o saldo de créditos não aumentou.",
-				"Energia consumida não compensada, apesar de injeção ou créditos.",
-			],
+            months: [
+                {
+                    value: 1,
+                    text: 'Janeiro'
+                },
+                {
+                    value: 2,
+                    text: 'Fevereiro'
+                },
+                {
+                    value: 3,
+                    text: 'Março'
+                },
+                {
+                    value: 4,
+                    text: 'Abril'
+                },
+                {
+                    value: 5,
+                    text: 'Maio'
+                },
+                {
+                    value: 6,
+                    text: 'Junho'
+                },
+                {
+                    value: 7,
+                    text: 'Julho'
+                },
+                {
+                    value: 8,
+                    text: 'Agosto'
+                },
+                {
+                    value: 9,
+                    text: 'Setembro'
+                },
+                {
+                    value: 10,
+                    text: 'Outubro'
+                },
+                {
+                    value: 11,
+                    text: 'Novembro'
+                },
+                {
+                    value: 12,
+                    text: 'Dezembro'
+                }
+            ],
+            years: [
+                {
+                    value: 2022,
+                },
+                {
+                    value: 2021,
+                },
+                {
+                    value: 2020,
+                },
+                {
+                    value: 2019,
+                },
+                {
+                    value: 2018,
+                },
+            ]
 		};
 	},
 

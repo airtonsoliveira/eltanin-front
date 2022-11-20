@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-row class="mx-n14" style="backgroundcolor: #087890">
+		<v-row class="mx-n14" style="backgroundColor: #087890">
 			<v-col class="pl-14 white--text"> UC Pedro </v-col>
 		</v-row>
 		<v-row>
@@ -100,22 +100,23 @@
 					itemText="text"
 					itemValue="value"
 					label="Unidade Geradora"
-					:items="optionsUnitType"
+					:items="optionsUnit"
 				>
 				</v-select>
 			</v-col>
 			<v-col cols="4">
 				<v-text-field
-					hide-details
 					solo
 					label="Percentual"
 					placeholder="Percentual"
+                    v-model="percentual"
+                    :rules="[numberRule]"
 				></v-text-field>
 			</v-col>
 		</v-row>
 		<v-row>
 			<v-col align="end">
-				<v-btn dark color="#034a59"> Concluir </v-btn>
+				<v-btn dark color="#034a59" @click="onSubmit"> Concluir </v-btn>
 			</v-col>
 		</v-row>
 	</div>
@@ -123,6 +124,7 @@
 
 <script>
 import { formatDateExtended } from "@/util/util";
+import Swal from "sweetalert2";
 export default {
 	name: "InvoicePage",
 
@@ -131,6 +133,11 @@ export default {
 			mensagem: "Nada",
 			pathMonth: null,
 			tab: 0,
+            percentual: 0,
+            numberRule: v  => {
+                if (!isNaN(parseFloat(v)) && v >= 0 && v <= 999) return true;
+                return 'Percentual de rateio deve estar entre 0 e 100';
+            },
 			optionsDistributor: [
 				{
 					text: "Enel",
@@ -151,6 +158,16 @@ export default {
 					value: 2,
 				},
 			],
+			optionsUnit: [
+				{
+					text: "Pedro X",
+					value: 1,
+				},
+				{
+					text: "Consorcio X",
+					value: 2,
+				},
+			],
 			optionsUF: [
 				{
 					text: "SP",
@@ -160,23 +177,7 @@ export default {
 					text: "MG",
 					value: 2,
 				},
-			],
-			ucData: [
-				{
-					name: "Nº instalação",
-					value: "940259574",
-				},
-				{
-					name: "Início vigência",
-					value: "01/10/2022",
-				},
-			],
-			rules: [
-				"Energia compensada deveria existir",
-				"Energia compensada maior que consumo",
-				"Injeção maior que consumo, porém o saldo de créditos não aumentou.",
-				"Energia consumida não compensada, apesar de injeção ou créditos.",
-			],
+			]
 		};
 	},
 
@@ -201,6 +202,12 @@ export default {
 
 	methods: {
 		formatDateExtended,
+
+        onSubmit() {
+            //Swal.fire('Erro', 'informações inválidas', 'error')
+            Swal.fire('Sucesso', 'Unidade cadastrada', 'success')
+            this.$router.push('/')
+        }
 	},
 };
 </script>

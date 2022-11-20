@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<v-row class="mx-n14" style="backgroundcolor: #087890">
+		<v-row class="mx-n14" style="backgroundColor: #087890">
 			<v-col class="pl-14 white--text">
-				Fatura Referente a {{ formatDateExtended(pathMonth) }} - UC1
+				Fatura Referente a {{ formatDateExtended(pathMonth) }} - Pedro X
 			</v-col>
 		</v-row>
 		<v-row>
@@ -15,7 +15,7 @@
 				>
 					<div
 						class="py-2 ma-n2 text-center title"
-						style="backgroundcolor: #c5f1ff"
+						style="backgroundColor: #c5f1ff"
 					>
 						{{ formatDateExtended(pathMonth) }}
 					</div>
@@ -102,7 +102,7 @@
 				<v-card class="pa-2" height="300px">
 					<v-row
 						class="ma-n2 text-center"
-						style="backgroundcolor: #d9d9d9"
+						style="backgroundColor: #d9d9d9"
 					>
 						<v-col cols="6"> Análises com Problema (0/4) </v-col>
 						<v-divider vertical></v-divider>

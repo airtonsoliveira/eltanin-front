@@ -13,8 +13,9 @@
 							Em caso de dúvidas sobre essas normas ou outras
 							indagações favor acessar a página de “Ajuda”.
 						</p>
-						<p>Equipe Eltanin</p>
-						<img src="/dragao.jpg" width="90px" />
+						<p>EQUIPE ELTANIN</p>
+            <p>Airton de Souza Oliveira</p>
+            <p>André Guarino de Almeida</p>
 					</v-col>
 				</v-row>
 			</v-card>
@@ -93,18 +94,28 @@
 			<v-card color="#EFEDED" height="600px" v-else>
 				<v-row>
 					<v-col class="pa-8">
-						Nome: {{ user ? user.name : "" }}
+						Nome: {{ user ? user.name : "Airton de Souza Oliveira" }}
 					</v-col>
-					<v-col align-self="center" cols="2">
+          <v-col align-self="center" cols="1">
+						<v-btn icon dense color="#041D4E" @click="logout">
+							<v-icon> mdi-account-edit-outline </v-icon>
+						</v-btn>
+					</v-col>
+					<v-col align-self="center" cols="1">
 						<v-btn icon dense color="#041D4E" @click="logout">
 							<v-icon> mdi-logout-variant </v-icon>
+						</v-btn>
+					</v-col>
+					<v-col align-self="center" class="mr-4" cols="1">
+						<v-btn icon dense color="#041D4E" @click="onSubmitDeleteUser">
+							<v-icon> mdi-delete-outline </v-icon>
 						</v-btn>
 					</v-col>
 				</v-row>
 				<v-divider></v-divider>
 				<v-row>
 					<v-col class="pa-8">
-						email: {{ user ? user.email : "" }}
+						email: {{ user ? user.email : "ton020500@gmail.com" }}
 					</v-col>
 				</v-row>
 				<v-divider></v-divider>
@@ -120,7 +131,7 @@
 					>
 						<v-card tile>
 							<v-card-title>
-								{{ unit.type }}: {{ unit.name }}
+								{{ unit.name }}
 							</v-card-title>
 						</v-card>
 					</v-col>
@@ -131,7 +142,7 @@
 </template>
 
 <script>
-import swal from "sweetalert2";
+import swal from "sweetalert2"
 
 export default {
 	name: "IndexPage",
@@ -141,7 +152,6 @@ export default {
 	data() {
 		return {
 			showPassword: false,
-			loggedIn: false,
 			formData: {
 				user: null,
 				pass: null,
@@ -157,41 +167,65 @@ export default {
 					type: "UG",
 					name: "Consorcio X",
 				},
+        {
+					type: "UC",
+					name: "Unidade teste",
+				},
 			],
-		};
+		}
 	},
 
 	computed: {
 		disableLogin() {
-			return !(this.formData.user && this.formData.pass);
+			return !(this.formData.user && this.formData.pass)
 		},
+    loggedIn() {
+      return this.$store.state.loggedIn
+    }
 	},
 
 	methods: {
 		authenticate() {
 			this.$nextTick(() => {
-				this.$refs.apiAuthSign?.submit();
-			});
+				this.$refs.apiAuthSign?.submit()
+			})
 		},
 
 		logout() {
-			localStorage.removeItem("idUser");
-			localStorage.removeItem("token");
-			this.loggedIn = false;
+      this.$store.commit('logOut')
+			localStorage.removeItem("idUser")
+			localStorage.removeItem("token")
 		},
 
 		onDoneSign({ data }) {
 			if (data) {
-				console.log(data);
-				localStorage.setItem("idUser", data.data.idUser);
-				localStorage.setItem("token", data.data.token);
-				this.loggedIn = true;
+				localStorage.setItem("idUser", data.data.idUser)
+				localStorage.setItem("token", data.data.token)   
+        this.$store.commit('logIn')
 			}
 		},
 
 		onErrorSign(data) {
-			swal.fire("Erro de autenticação", data.message, "error");
+			swal.fire("Erro de autenticação", data.message, "error")
 		},
+
+    onSubmitDeleteUser() {
+      swal.fire({
+        title: 'Deseja deletar o usuário?',
+        html: 'Após a deleção não será possível acessar a plataforma e seu histórico de ações será perdido',
+        showDenyButton: true,
+        confirmButtonText: 'Deletar',
+        denyButtonText: 'Cancelar',
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          swal.fire('Usuário deletado', '', 'success')
+          this.$nextTick(() => {
+            this.logout()
+          })
+        }
+      })
+    }
 	},
-};
+}
 </script>

@@ -1,10 +1,9 @@
 
-import auth from './auth'
-
-
 export default {
     state: () => ({
-        loggedIn: false
+        loggedIn: false,
+        token: null,
+        idUser: null
     }),
 
     mutations: {
@@ -21,7 +20,5 @@ export default {
 
     getters: {},
 
-    modules: {
-        auth
-    }
+    modules: {}
 }

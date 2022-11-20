@@ -2,7 +2,16 @@
 	<v-row justify="center" align="center" class="mt-6">
 		<v-col>
 			<v-card color="#EFEDED">
-				<v-row class="py-8">
+                <v-row class="py-8" v-if="loggedIn">
+                    <ApiUserGetById
+						:id="idUser"
+                        @done="onDoneUserById"
+                    ></ApiUserGetById>
+					<v-col class="headline text-center" cols="12">
+						Edição de Cadastro
+					</v-col>
+				</v-row>
+				<v-row class="py-8" v-else>
 					<v-col class="headline text-center" cols="12">
 						Cadastro
 					</v-col>
@@ -13,6 +22,11 @@
 						:variables="formData"
                         @done="onDoneUserPost"
 					></ApiUserPost>
+					<ApiUserPut
+						ref="apiUserPut"
+						:variables="formData"
+                        @done="onDoneUserPost"
+					></ApiUserPut>
 					<v-col cols="6">
 						<v-row justify="center">
 							<v-col cols="10">
@@ -32,6 +46,7 @@
 									label="E-mail"
 									type="email"
 									v-model="formData.email"
+									:disabled="loggedIn"
 								></v-text-field>
 							</v-col>
 						</v-row>
@@ -42,6 +57,7 @@
 									outlined
 									label="Confirmação de e-mail"
 									v-model="formData.emailConfirm"
+									v-if="!loggedIn"
 								></v-text-field>
 							</v-col>
 						</v-row>
@@ -81,6 +97,7 @@
 									background-color="#fff"
 									label="Confirmar Senha"
 									v-model="formData.passwordConfirm"
+									v-if="!loggedIn"
 									:append-icon="
 										showPassword ? 'mdi-eye' : 'mdi-eye-off'
 									"
@@ -134,16 +151,45 @@ export default {
 		};
 	},
 
+    computed: {
+        loggedIn() {
+			return this.$store.state.loggedIn
+        },
+
+		idUser() {
+			return String(this.$store.state.idUser)
+		}
+    },
+
 	methods: {
 		onSubmit() {
-            this.onDoneUserPost()
-			//this.$refs.apiUserPost?.submit();
-			//this.$router.push("/");
+			if (this.loggedIn) {
+				this.$refs.apiUserPut?.submit()
+			} else {
+				this.$refs.apiUserPost?.submit()
+			}
 		},
 
+        onDoneUserById({ data }) {
+			this.formData = data?.data.length ? data.data[0] : initFormData
+        },
+
         onDoneUserPost() {
-            swal.fire('Error', 'Usuário já está cadastrado', 'error')
-            //swal.fire('Sucesso', 'Usuário cadastrado', 'success')
+            //swal.fire('Error', 'Usuário já está cadastrado', 'error')
+            if (this.loggedIn) {
+				swal.fire('Sucesso', 'Cadastro atualizado', 'success').then((click) => {
+					console.log(click)
+					if (click.isConfirmed) {
+						this.$router.push('/')
+					}
+				})
+			} else {
+				swal.fire('Sucesso', 'Usuário cadastrado', 'success').then((click) => {
+					if (click.isConfirmed) {
+						this.$router.push('/')
+					}
+				})
+			}
         }
 	},
 };

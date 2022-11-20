@@ -110,7 +110,7 @@
 					</v-row>
 					<v-row class="mt-2">
 						<v-col cols="6">
-							<v-row v-for="rule in []" v-bind:key="rule">
+							<v-row v-for="rule in []" :key="rule">
 								<v-col class="py-1 text-center">
 									{{ rule }}
 								</v-col>
@@ -118,7 +118,7 @@
 						</v-col>
 						<v-divider vertical></v-divider>
 						<v-col cols="6">
-							<v-row v-for="rule in rules" v-bind:key="rule">
+							<v-row v-for="rule in rules" :key="rule">
 								<v-col class="py-2 text-center">
 									{{ rule }}
 								</v-col>
@@ -160,7 +160,7 @@
 									cols="3"
 									style="height: 130px"
 									v-for="item in invoiceData"
-									v-bind:key="item.name"
+									:key="item.name"
 								>
 									<v-row class="pt-4 text-center">
 										<v-col class="py-1 subtitle-2">
@@ -187,7 +187,7 @@
 									cols="3"
 									style="height: 130px"
 									v-for="item in ucData"
-									v-bind:key="item.name"
+									:key="item.name"
 								>
 									<v-row class="pt-4 text-center">
 										<v-col class="py-1 subtitle-2">

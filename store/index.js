@@ -7,12 +7,16 @@ export default {
     }),
 
     mutations: {
-        logIn(state) {
+        logIn(state, payload) {
             state.loggedIn = true
+            state.token = payload.token
+            state.idUser = payload.idUser
         },
 
         logOut(state) {
             state.loggedIn = false
+            state.token = null
+            state.idUser = null
         }
     },
 

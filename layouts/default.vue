@@ -114,7 +114,6 @@ export default {
 		loggedIn: {
 			immediate: false,
 			handler(value) {
-				console.log(value);
 				if (value) {
 					this.pagesShowed = this.pages;
 				} else {

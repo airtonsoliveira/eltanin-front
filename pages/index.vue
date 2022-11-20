@@ -14,8 +14,8 @@
 							indagações favor acessar a página de “Ajuda”.
 						</p>
 						<p>EQUIPE ELTANIN</p>
-            <p>Airton de Souza Oliveira</p>
-            <p>André Guarino de Almeida</p>
+						<p>Airton de Souza Oliveira</p>
+						<p>André Guarino de Almeida</p>
 					</v-col>
 				</v-row>
 			</v-card>
@@ -92,12 +92,23 @@
 				</v-row>
 			</v-card>
 			<v-card color="#EFEDED" height="600px" v-else>
+				<ApiUserGetById
+					manualSubmit
+					ref="apiUserGet"
+					:id="idUser"
+					@done="onDoneUserGet"
+				></ApiUserGetById>
+				<ApiUnitGet
+					manualSubmit
+					ref="apiUnitGet"
+					@done="onDoneUnitGet"
+				></ApiUnitGet>
 				<v-row>
 					<v-col class="pa-8">
-						Nome: {{ user ? user.name : "Airton de Souza Oliveira" }}
+						Nome: {{ user ? user.name : null }}
 					</v-col>
-          <v-col align-self="center" cols="1">
-						<v-btn icon dense color="#041D4E" @click="logout">
+					<v-col align-self="center" cols="1">
+						<v-btn icon dense color="#041D4E" @click="$router.push('/signIn')">
 							<v-icon> mdi-account-edit-outline </v-icon>
 						</v-btn>
 					</v-col>
@@ -107,7 +118,12 @@
 						</v-btn>
 					</v-col>
 					<v-col align-self="center" class="mr-4" cols="1">
-						<v-btn icon dense color="#041D4E" @click="onSubmitDeleteUser">
+						<v-btn
+							icon
+							dense
+							color="error"
+							@click="onSubmitDeleteUser"
+						>
 							<v-icon> mdi-delete-outline </v-icon>
 						</v-btn>
 					</v-col>
@@ -115,23 +131,35 @@
 				<v-divider></v-divider>
 				<v-row>
 					<v-col class="pa-8">
-						email: {{ user ? user.email : "ton020500@gmail.com" }}
+						email: {{ user ? user.email : null }}
 					</v-col>
 				</v-row>
 				<v-divider></v-divider>
 				<v-row>
 					<v-col class="pa-8"> Unidades cadastradas: </v-col>
 				</v-row>
-				<v-row>
+				<v-row v-if="units.length">
 					<v-col
 						class="px-8"
 						cols="12"
 						v-for="unit in units"
-						v-bind:key="unit.name"
+						:key="unit.name"
 					>
 						<v-card tile>
 							<v-card-title>
 								{{ unit.name }}
+							</v-card-title>
+						</v-card>
+					</v-col>
+				</v-row>
+				<v-row v-else>
+					<v-col
+						class="px-8"
+						cols="12"
+					>
+						<v-card tile>
+							<v-card-title>
+								Nenhuma unidade encontrada...
 							</v-card-title>
 						</v-card>
 					</v-col>
@@ -142,7 +170,7 @@
 </template>
 
 <script>
-import swal from "sweetalert2"
+import swal from "sweetalert2";
 
 export default {
 	name: "IndexPage",
@@ -156,76 +184,95 @@ export default {
 				user: null,
 				pass: null,
 			},
-			idUser: null,
 			user: null,
-			units: [
-				{
-					type: "UC",
-					name: "Pedro X",
-				},
-				{
-					type: "UG",
-					name: "Consorcio X",
-				},
-        {
-					type: "UC",
-					name: "Unidade teste",
-				},
-			],
-		}
+			units: [],
+		};
 	},
 
 	computed: {
 		disableLogin() {
-			return !(this.formData.user && this.formData.pass)
+			return !(this.formData.user && this.formData.pass);
 		},
-    loggedIn() {
-      return this.$store.state.loggedIn
-    }
+
+		loggedIn() {
+			return this.$store.state.loggedIn
+		},
+
+		idUser() {
+			return String(this.$store.state.idUser)
+		}
+	},
+
+	watch: {
+		loggedIn: {
+			immediate: true,
+			handler(val) {
+				if (val) {
+					this.$nextTick(() => {
+						this.$refs.apiUserGet?.submit();
+						this.$refs.apiUnitGet?.submit();
+					})
+				}
+			},
+		},
 	},
 
 	methods: {
 		authenticate() {
 			this.$nextTick(() => {
-				this.$refs.apiAuthSign?.submit()
-			})
+				this.$refs.apiAuthSign?.submit();
+			});
 		},
 
 		logout() {
-      this.$store.commit('logOut')
-			localStorage.removeItem("idUser")
-			localStorage.removeItem("token")
+			this.$store.commit("logOut");
 		},
 
 		onDoneSign({ data }) {
 			if (data) {
-				localStorage.setItem("idUser", data.data.idUser)
-				localStorage.setItem("token", data.data.token)   
-        this.$store.commit('logIn')
+				const token = data.data.token
+				const idUser = data.data.idUser
+				this.$store.commit("logIn", { token, idUser })
+
+        		this.user = {
+					name: data.data.name,
+					email: this.formData.user
+				}
+
+				this.$nextTick(() => {
+					this.$refs.apiUnitGet?.submit();
+				});
 			}
 		},
 
-		onErrorSign(data) {
-			swal.fire("Erro de autenticação", data.message, "error")
+		onDoneUnitGet({ data }) {
+			this.units = data?.data ? data.data : null
 		},
 
-    onSubmitDeleteUser() {
-      swal.fire({
-        title: 'Deseja deletar o usuário?',
-        html: 'Após a deleção não será possível acessar a plataforma e seu histórico de ações será perdido',
-        showDenyButton: true,
-        confirmButtonText: 'Deletar',
-        denyButtonText: 'Cancelar',
-      }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-          swal.fire('Usuário deletado', '', 'success')
-          this.$nextTick(() => {
-            this.logout()
-          })
-        }
-      })
-    }
+		onDoneUserGet({ data }) {
+			this.user = data?.data.length ? data.data[0] : null
+		},
+
+		onErrorSign(data) {
+			swal.fire("Erro de autenticação", data.message, "error");
+		},
+
+		onSubmitDeleteUser() {
+			swal.fire({
+				title: "Deseja deletar o usuário?",
+				html: "Após a deleção não será possível acessar a plataforma e seu histórico de ações será perdido",
+				showDenyButton: true,
+				confirmButtonText: "Deletar",
+				denyButtonText: "Cancelar",
+			}).then((result) => {
+				if (result.isConfirmed) {
+					swal.fire("Usuário deletado", "", "success");
+					this.$nextTick(() => {
+						this.logout();
+					});
+				}
+			});
+		},
 	},
-}
+};
 </script>

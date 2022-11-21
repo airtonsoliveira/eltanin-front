@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<v-row class="mx-n14" style="backgroundColor: #087890">
+		<v-row class="mx-n14" style="background-color: #087890">
 			<v-col class="pl-14 white--text"> Histórico de Faturas </v-col>
 		</v-row>
-		<v-row align="center">
+		<v-row align="center" class="pb-2">
 			<v-col cols="3">
 				<v-row align="center">
 					<v-col cols="3">
@@ -29,12 +29,8 @@
 				</v-row>
 			</v-col>
 		</v-row>
-		<ApiUnitGet
-			@done="onDoneUnitGet"
-		></ApiUnitGet>
-		<ApiInvoiceGet
-			@done="onDoneInvoiceGet"
-		></ApiInvoiceGet>
+		<ApiUnitGet @done="onDoneUnitGet"></ApiUnitGet>
+		<ApiInvoiceGet @done="onDoneInvoiceGet"></ApiInvoiceGet>
 		<v-row v-for="unit in units" :key="unit.id">
 			<v-col>
 				<v-row>
@@ -45,41 +41,42 @@
 				<v-divider></v-divider>
 				<v-row>
 					<v-col
-						v-for="invoice in invoices"
+						v-for="invoice in invoices.filter((el) => {
+							return el.unitId === unit.id;
+						})"
 						:key="invoice.id"
-						class="px-5"
-						cols="2"
-						style="height: 170px"
+						class="px-5 pb-0"
+						cols="4"
+						style="height: 220px"
 					>
 						<v-row
 							class="mt-2"
 							style="cursor: pointer"
-							@click="$router.push(`/invoice?month=${invoice.yearMonth}`)"
+							@click="
+								$router.push(
+									`/invoice?month=${invoice.referenceMonth}`
+								)
+							"
 						>
-							<v-col style="height: 100px"></v-col>
-							<v-col
-								:style="`height: 100px; width: 14%; background-color: #092E1A; position: absolute; border-radius: 10px 10px 10px 10px;`"
-								v-if="!invoice.exceeded"
-							></v-col>
-							<v-col
-								:style="`height: 100px; width: ${ invoice.exceeded ? '14%' : barPercentual(invoice) };
-								background-color: #23844F; position: absolute; 
-								border-radius: 10px ${invoice.exceeded ? '10px 10px' : '0px 0px'} 10px`"
-							></v-col>
-							<v-col
-								:style="`height: 100px; width: ${barPercentual(invoice)};
-								background-color: #31D37C; position: absolute; border-radius: 10px 0px 0px 10px;`"
-								v-if="invoice.exceeded"
-							></v-col>
+							<v-col class="py-0 my-n10">
+								<InvoiceChart
+									horizontal
+									:consumed="invoice.consumed"
+									:injected="invoice.injected"
+								/>
+							</v-col>
 						</v-row>
 						<v-row>
 							<v-col class="pb-0 text-center">
-								{{ formatDateExtended(invoice.yearMonth) }}
+								{{ formatDateExtended(invoice.referenceMonth) }}
 							</v-col>
 						</v-row>
 					</v-col>
 				</v-row>
 			</v-col>
+		</v-row>
+		<v-row>
+			<v-spacer style="height: 100px;"/>
 		</v-row>
 	</div>
 </template>
@@ -93,32 +90,23 @@ export default {
 		return {
 			invoices: [
 				{
-					id: 5,
-					yearMonth: 202208,
-					generated: 4242 - 3741,
-					compensated: 3741,
-					notCompensated: 0,
-					exceeded: 1,
-					unitId: 1
+					id: 1,
+					referenceMonth: 202208,
+					exceeded: 0,
+					unitId: 1,
 				},
 				{
-					id: 6,
-					yearMonth: 202209,
-					generated: 5314 - 3433,
-					compensated: 3433,
-					notCompensated: 0,
-					exceeded: 1,
-					unitId: 1
+					id: 2,
+					referenceMonth: 202209,
+					exceeded: 0,
+					unitId: 1,
 				},
 				{
-					id: 7,
-					yearMonth: 202210,
-					generated: 5168 - 3792,
-					compensated: 3792,
-					notCompensated: 0,
-					exceeded: 1,
-					unitId: 2
-				}
+					id: 3,
+					referenceMonth: 202210,
+					exceeded: 0,
+					unitId: 2,
+				},
 			],
 			units: [],
 			months: [
@@ -148,23 +136,39 @@ export default {
 	},
 
 	methods: {
-		barPercentual(month) {
-			const percentual = month.exceeded
-				? (14 * month.generated) / (month.compensated + month.generated)
-				: 14 *(1 - month.notCompensated/(month.compensated + month.notCompensated));
+		barPercentual(invoice) {
+			let percentual = 0;
+
+			if (invoice.injected && invoice.consumed) {
+				const balance = invoice.exceeded
+					? invoice.injected - invoice.consumed
+					: invoice.consumed - invoice.injected;
+				percentual = invoice.exceeded
+					? (14 * balance) / invoice.injected
+					: 14 * (1 - balance / invoice.consumed);
+			}
+
 			return percentual + "%";
 		},
 
 		formatDateExtended,
 
 		onDoneInvoiceGet({ data }) {
-			console.log(data)
-			//this.invoices = data?.data ? data.data : null
+			this.invoices = data?.data ? data.data : [];
+			this.invoices = this.invoices.map((invoice) => {
+				return {
+					...invoice,
+					exceeded:
+						invoice.injected && invoice.consumed
+							? invoice.injected >= invoice.consumed
+							: 0,
+				};
+			});
 		},
 
 		onDoneUnitGet({ data }) {
-			this.units = data?.data ? data.data : null
-		}
+			this.units = data?.data ? data.data : null;
+		},
 	},
 };
 </script>

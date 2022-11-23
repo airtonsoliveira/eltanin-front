@@ -2,7 +2,7 @@
 import VueApexCharts from 'vue-apexcharts'
 
 export default {
-    name: 'Chart',
+    name: 'AtomsChart',
 
     extends: VueApexCharts
 }

@@ -59,10 +59,7 @@
 							<v-col cols="8" class="pa-2 pt-12 pr-4">
 								<v-row align="center" class="fill-height">
 									<v-col>
-										<img
-											src="/overview_example.png"
-											alt="overview_example"
-										/>
+										<OverviewChart/>
 									</v-col>
 								</v-row>
 							</v-col>
@@ -103,6 +100,8 @@
 
 <script>
 export default {
-	name: "OverviewPage",
+	name: 'OverviewPage',
+
+	middleware: 'authenticated',
 };
 </script>

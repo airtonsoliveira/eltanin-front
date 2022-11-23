@@ -47,27 +47,27 @@
 						:key="invoice.id"
 						class="px-5 pb-0"
 						cols="4"
-						style="height: 220px"
 					>
 						<v-row
 							class="mt-2"
 							style="cursor: pointer"
 							@click="
 								$router.push(
-									`/invoice?month=${invoice.referenceMonth}`
+									`/invoice?id=${invoice.id}`
 								)
 							"
 						>
 							<v-col class="py-0 my-n10">
 								<InvoiceChart
 									horizontal
-									:consumed="invoice.consumed"
-									:injected="invoice.injected"
+									height="200"
+									:consumed="invoice.consumed + 150"
+									:injected="invoice.injected + 100"
 								/>
 							</v-col>
 						</v-row>
 						<v-row>
-							<v-col class="pb-0 text-center">
+							<v-col class="pb-4 text-center">
 								{{ formatDateExtended(invoice.referenceMonth) }}
 							</v-col>
 						</v-row>
@@ -82,9 +82,11 @@
 </template>
 
 <script>
-import { formatDateExtended } from "@/util/util";
+import { formatDateExtended } from '@/util/util';
 export default {
-	name: "HistoryPage",
+	name: 'HistoryPage',
+
+	middleware: 'authenticated',
 
 	data() {
 		return {
@@ -136,34 +138,10 @@ export default {
 	},
 
 	methods: {
-		barPercentual(invoice) {
-			let percentual = 0;
-
-			if (invoice.injected && invoice.consumed) {
-				const balance = invoice.exceeded
-					? invoice.injected - invoice.consumed
-					: invoice.consumed - invoice.injected;
-				percentual = invoice.exceeded
-					? (14 * balance) / invoice.injected
-					: 14 * (1 - balance / invoice.consumed);
-			}
-
-			return percentual + "%";
-		},
-
 		formatDateExtended,
 
 		onDoneInvoiceGet({ data }) {
 			this.invoices = data?.data ? data.data : [];
-			this.invoices = this.invoices.map((invoice) => {
-				return {
-					...invoice,
-					exceeded:
-						invoice.injected && invoice.consumed
-							? invoice.injected >= invoice.consumed
-							: 0,
-				};
-			});
 		},
 
 		onDoneUnitGet({ data }) {

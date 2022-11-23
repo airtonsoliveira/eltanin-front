@@ -16,7 +16,7 @@ export default Vue.extend({
 
     watch: {
         id: {
-            immediate: false,
+            immediate: true,
             handler(val) {
                 this.url = `http://localhost:5500/invoice/${val}`
             }

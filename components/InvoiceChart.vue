@@ -3,14 +3,19 @@ export default {
     name: 'InvoiceChart',
 
     props: {
+        height: {
+            type: [String, Number],
+            default: 'auto'
+        },
+
         injected: {
             type: Number,
-            default: 10
+            default: 0
         },
 
         consumed: {
             type: Number,
-            default: 20
+            default: 0
         },
 
         horizontal: {

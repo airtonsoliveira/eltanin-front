@@ -170,12 +170,10 @@
 </template>
 
 <script>
-import swal from "sweetalert2";
+import swal from 'sweetalert2';
 
 export default {
-	name: "IndexPage",
-
-	layout: "default",
+	name: 'IndexPage',
 
 	data() {
 		return {
@@ -225,14 +223,14 @@ export default {
 		},
 
 		logout() {
-			this.$store.commit("logOut");
+			this.$store.commit('logOut');
 		},
 
 		onDoneSign({ data }) {
 			if (data) {
 				const token = data.data.token
 				const idUser = data.data.idUser
-				this.$store.commit("logIn", { token, idUser })
+				this.$store.commit('logIn', { token, idUser })
 
         		this.user = {
 					name: data.data.name,
@@ -254,19 +252,19 @@ export default {
 		},
 
 		onErrorSign(data) {
-			swal.fire("Erro de autenticação", data.message, "error");
+			swal.fire('Erro de autenticação', data.message, 'error');
 		},
 
 		onSubmitDeleteUser() {
 			swal.fire({
-				title: "Deseja deletar o usuário?",
-				html: "Após a deleção não será possível acessar a plataforma e seu histórico de ações será perdido",
+				title: 'Deseja deletar o usuário?',
+				html: 'Após a deleção não será possível acessar a plataforma e seu histórico de ações será perdido',
 				showDenyButton: true,
-				confirmButtonText: "Deletar",
-				denyButtonText: "Cancelar",
+				confirmButtonText: 'Deletar',
+				denyButtonText: 'Cancelar',
 			}).then((result) => {
 				if (result.isConfirmed) {
-					swal.fire("Usuário deletado", "", "success");
+					swal.fire('Usuário deletado', '', 'success');
 					this.$nextTick(() => {
 						this.logout();
 					});

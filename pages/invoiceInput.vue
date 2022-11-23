@@ -71,67 +71,69 @@
 </template>
 
 <script>
-import { formatDateExtended } from "@/util/util";
+import { formatDateExtended } from '@/util/util';
 export default {
-	name: "InvoicePage",
+	name: 'InvoicePage',
+
+	middleware: 'authenticated',
 
 	data() {
 		return {
-			mensagem: "Nada",
+			mensagem: 'Nada',
 			pathMonth: null,
 			tab: 0,
 			optionsDistributor: [
 				{
-					text: "Enel",
+					text: 'Enel',
 					value: 1,
 				},
 				{
-					text: "Energisa",
+					text: 'Energisa',
 					value: 2,
 				},
 			],
             optionsUnit: [
 				{
-					type: "UC",
-					name: "Pedro X",
+					type: 'UC',
+					name: 'Pedro X',
 				},
 				{
-					type: "UG",
-					name: "Consorcio X",
+					type: 'UG',
+					name: 'Consorcio X',
 				},
                 {
-					type: "UC",
-					name: "Unidade teste",
+					type: 'UC',
+					name: 'Unidade teste',
 				},
 			],
 			optionsUnitType: [
 				{
-					text: "UC",
+					text: 'UC',
 					value: 1,
 				},
 				{
-					text: "UG",
+					text: 'UG',
 					value: 2,
 				},
 			],
 			optionsUF: [
 				{
-					text: "SP",
+					text: 'SP',
 					value: 1,
 				},
 				{
-					text: "MG",
+					text: 'MG',
 					value: 2,
 				},
 			],
 			ucData: [
 				{
-					name: "Nº instalação",
-					value: "940259574",
+					name: 'Nº instalação',
+					value: '940259574',
 				},
 				{
-					name: "Início vigência",
-					value: "01/10/2022",
+					name: 'Início vigência',
+					value: '01/10/2022',
 				},
 			],
             months: [

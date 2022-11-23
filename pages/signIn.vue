@@ -178,7 +178,6 @@ export default {
             //swal.fire('Error', 'Usuário já está cadastrado', 'error')
             if (this.loggedIn) {
 				swal.fire('Sucesso', 'Cadastro atualizado', 'success').then((click) => {
-					console.log(click)
 					if (click.isConfirmed) {
 						this.$router.push('/')
 					}

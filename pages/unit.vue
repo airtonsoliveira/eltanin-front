@@ -9,8 +9,8 @@
 		<ApiUnitPut
 			manualSubmit
 			ref="apiUnitPut"
-			:variables="formData"
 			:id="unitId"
+			:variables="formData"
 			@done="onDoneUnitPut"
 			@error="onError"
 		/>
@@ -21,9 +21,12 @@
 			@done="onDoneUnitPost"
 			@error="onError"
 		/>
-		<v-row v-if="unit" class="mx-n14" style="backgroundColor: #087890">
-			<v-col class="pl-14 white--text">
-				{{ unit.name }}
+		<v-row class="mx-n14" style="backgroundColor: #087890">
+			<v-col v-if="unit" class="pl-14 white--text">
+				Dados cadastrados - {{ unit.name }}
+			</v-col>
+			<v-col v-else class="pl-14 white--text">
+				Cadastro de nova unidade
 			</v-col>
 		</v-row>
 		<v-row>
@@ -82,7 +85,7 @@
 					solo
 					label="Número"
 					placeholder="Número"
-					v-model=formData.number
+					v-model="formData.number"
 				></v-text-field>
 			</v-col>
 			<v-col cols="6">
@@ -105,29 +108,41 @@
 			</v-col>
 		</v-row>
 		<v-row>
-			<v-col> Rateio </v-col>
+			<v-col> Fornece energia para: </v-col>
 		</v-row>
-		<v-divider class="pa-2"></v-divider>
-		<v-row>
-			<v-col cols="7">
-				<v-select
-					hide-details
-					solo
-					itemText="text"
-					itemValue="value"
-					label="Unidade Consumidora"
-					v-model="formData.apportionment[0].consumerUnit"
-					:items="optionsUnit"
-				></v-select>
+		<v-divider class="pt-2 pb-6"></v-divider>
+		<v-row v-for="(apportionment, index) in apportionments" :key="index">
+			<v-col class="py-0" cols="7">
+				<VSelectUnit hide-details v-model="formData.apportionment[index].consumerUnit"/>
 			</v-col>
-			<v-col cols="4">
+			<v-col class="py-0" cols="4">
 				<v-text-field
 					solo
 					label="Percentual"
 					placeholder="Percentual"
-                    v-model="formData.apportionment[0].percentual"
-                    :rules="[numberRule]"
+					v-model="formData.apportionment[index].percentual"
+					:rules="[numberRule]"
 				></v-text-field>
+			</v-col>
+			<v-col class="pt-1">
+				<v-btn
+					icon
+					color="error"
+					@click="formData.apportionment.splice(index, 1)"
+				>
+					<v-icon>
+						mdi-delete-outline
+					</v-icon>
+				</v-btn>
+			</v-col>
+		</v-row>
+		<v-row>
+			<v-col class="pt-0">
+				<v-btn fab small dark color="#087890" @click="insertApportionment">
+					<v-icon dark>
+						mdi-plus
+					</v-icon>
+				</v-btn>
 			</v-col>
 		</v-row>
 		<v-row>
@@ -139,8 +154,8 @@
 </template>
 
 <script>
-import { formatDateExtended } from '@/util/util';
-import Swal from 'sweetalert2';
+import { formatDateExtended } from "@/util/util";
+import Swal from "sweetalert2";
 
 const initFormData = {
 	name: null,
@@ -153,16 +168,16 @@ const initFormData = {
 	number: null,
 	neighborhood: null,
 	complement: null,
-	apportionment: [
-		{
-			consumerUnit: null,
-			percentual: null	
-		}
-	],
+	apportionment: [],
+};
+
+const initApportionment = {
+	consumerUnit: null,
+	percentual: null,
 }
 
 export default {
-	name: 'InvoicePage',
+	name: 'UnitPage',
 
 	middleware: 'authenticated',
 
@@ -173,12 +188,12 @@ export default {
 			unitId: null,
 			pathMonth: null,
 			tab: 0,
-            percentual: 0,
+			percentual: 0,
 			formData: Object.assign({}, initFormData),
-            numberRule: v  => {
-                if (!isNaN(parseFloat(v)) && v >= 0 && v <= 999) return true;
-                return 'Percentual de rateio deve estar entre 0 e 100';
-            },
+			numberRule: (v) => {
+				if (!isNaN(parseFloat(v)) && v >= 0 && v <= 999) return true;
+				return 'Percentual de rateio deve estar entre 0 e 100';
+			},
 			optionsDistributor: [
 				{
 					text: 'Enel',
@@ -199,26 +214,12 @@ export default {
 					value: 2,
 				},
 			],
-			optionsUnit: [
-				{
-					text: 'Pedro X',
-					value: 1,
-				},
-				{
-					text: 'Consorcio X',
-					value: 2,
-				},
-			],
 			optionsUF: [
 				{
 					text: 'SP',
 					value: 1,
-				},
-				{
-					text: 'MG',
-					value: 2,
-				},
-			]
+				}
+			],
 		};
 	},
 
@@ -229,8 +230,8 @@ export default {
 				this.unitId = String(val.params.unitId);
 				if (val.params.unitId) {
 					this.$nextTick(() => {
-						this.$refs.apiUnitGet?.submit()
-					})
+						this.$refs.apiUnitGet?.submit();
+					});
 				}
 			},
 		},
@@ -243,22 +244,31 @@ export default {
 				return el.yearMonth === pathMonth;
 			});
 			return selectedMonth[0];
+		},
+
+		apportionments() {
+			return this.formData.apportionment
 		}
 	},
 
 	methods: {
 		formatDateExtended,
 
-        onSubmit() {
-            if(this.unitId) {
-				this.$refs.apiUnitPut?.submit()
+		insertApportionment() {
+			const apportionment = Object.assign({}, initApportionment)
+			this.formData.apportionment.push(apportionment)
+		},
+
+		onSubmit() {
+			if (Number(this.unitId)) {
+				this.$refs.apiUnitPut?.submit();
 			} else {
-				this.$refs.apiUnitPost?.submit()
+				this.$refs.apiUnitPost?.submit();
 			}
-        },
+		},
 
 		onDoneUnitGet({ data }) {
-			this.unit = data?.data.length ? data.data[0] : null
+			this.unit = data?.data.length ? data.data[0] : null;
 
 			if (this.unit) {
 				this.formData = {
@@ -270,23 +280,23 @@ export default {
 					street: this.unit.street,
 					number: this.unit.number,
 					neighborhood: this.unit.neighborhood,
-					complement: this.unit.complement
-				}
+					complement: this.unit.complement,
+					apportionment: this.unit.apportionment
+				};
 			}
 		},
 
 		onDoneUnitPost({ data }) {
-            Swal.fire('Sucesso', 'Unidade cadastrada', 'success')
+			Swal.fire('Sucesso', 'Unidade cadastrada', 'success');
 		},
 
-		
 		onDoneUnitPut({ data }) {
-			Swal.fire('Sucesso', 'Cadastro atualizado', 'success')
+			Swal.fire('Sucesso', 'Cadastro atualizado', 'success');
 		},
 
-		onError({ data }) {	
-			Swal.fire('Erro', 'informações inválidas', 'error')
-		}
+		onError({ data }) {
+			Swal.fire('Erro', 'informações inválidas', 'error');
+		},
 	},
 };
 </script>

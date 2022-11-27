@@ -1,7 +1,7 @@
 <template>
 	<v-row justify="center" align="center" class="mt-6">
 		<v-col cols="4">
-			<v-card color="#EAECFF" height="600px">
+			<v-card color="#EAECFF" style="height: 600px; overflow-y: auto; overflow-x: hidden">
 				<v-row align="center" class="pa-4 fill-height">
 					<v-col class="subtitle-1 text-center black--text">
 						<p>
@@ -36,7 +36,7 @@
 				<v-row justify="center">
 					<v-col cols="6">
 						<v-text-field
-							background-color="#fff"
+							backgroundColor="#fff"
 							outlined
 							label="email"
 							v-model="formData.user"
@@ -47,7 +47,7 @@
 					<v-col cols="6">
 						<v-text-field
 							outlined
-							background-color="#fff"
+							backgroundColor="#fff"
 							label="senha"
 							v-model="formData.pass"
 							:append-icon="
@@ -82,7 +82,7 @@
 							class="text-none"
 							color="primary"
 							height="50px"
-							style="background-color: #fff"
+							style="backgroundColor: #fff"
 							nuxt
 							to="/signIn"
 						>
@@ -108,7 +108,12 @@
 						Nome: {{ user ? user.name : null }}
 					</v-col>
 					<v-col align-self="center" cols="1">
-						<v-btn icon dense color="#041D4E" @click="$router.push('/signIn')">
+						<v-btn
+							icon
+							dense
+							color="#041D4E"
+							@click="$router.push('/signIn')"
+						>
 							<v-icon> mdi-account-edit-outline </v-icon>
 						</v-btn>
 					</v-col>
@@ -138,14 +143,17 @@
 				<v-row>
 					<v-col class="pa-8"> Unidades cadastradas: </v-col>
 				</v-row>
-				<v-row v-if="units.length">
+				<v-row v-if="units.length" class="mr-4" style="height: 360px; overflow-y: auto">
 					<v-col
 						class="px-8"
 						cols="12"
 						v-for="unit in units"
 						:key="unit.name"
 					>
-						<v-card tile>
+						<v-card
+							tile
+							@click="redirect('/unit', { unitId: unit.id })"
+						>
 							<v-card-title>
 								{{ unit.name }}
 							</v-card-title>
@@ -153,10 +161,7 @@
 					</v-col>
 				</v-row>
 				<v-row v-else>
-					<v-col
-						class="px-8"
-						cols="12"
-					>
+					<v-col class="px-8" cols="12">
 						<v-card tile>
 							<v-card-title>
 								Nenhuma unidade encontrada...
@@ -170,10 +175,10 @@
 </template>
 
 <script>
-import swal from 'sweetalert2';
+import swal from "sweetalert2";
 
 export default {
-	name: 'IndexPage',
+	name: "IndexPage",
 
 	data() {
 		return {
@@ -193,12 +198,12 @@ export default {
 		},
 
 		loggedIn() {
-			return this.$store.state.loggedIn
+			return this.$store.state.loggedIn;
 		},
 
 		idUser() {
-			return String(this.$store.state.idUser)
-		}
+			return String(this.$store.state.idUser);
+		},
 	},
 
 	watch: {
@@ -209,7 +214,7 @@ export default {
 					this.$nextTick(() => {
 						this.$refs.apiUserGet?.submit();
 						this.$refs.apiUnitGet?.submit();
-					})
+					});
 				}
 			},
 		},
@@ -223,19 +228,31 @@ export default {
 		},
 
 		logout() {
-			this.$store.commit('logOut');
+			this.$store.commit("logOut");
+		},
+
+		redirect(path, params) {
+			this.$nextTick(() => {
+				this.$router.push({
+					name: path.slice(1),
+					path: path,
+					params: params,
+				});
+			});
 		},
 
 		onDoneSign({ data }) {
 			if (data) {
-				const token = data.data.token
-				const idUser = data.data.idUser
-				this.$store.commit('logIn', { token, idUser })
+				const token = data.data.token;
+				const idUser = data.data.idUser;
+				this.$store.commit("logIn", { token, idUser });
 
-        		this.user = {
+				this.$router.push('/overview')
+
+				this.user = {
 					name: data.data.name,
-					email: this.formData.user
-				}
+					email: this.formData.user,
+				};
 
 				this.$nextTick(() => {
 					this.$refs.apiUnitGet?.submit();
@@ -244,27 +261,27 @@ export default {
 		},
 
 		onDoneUnitGet({ data }) {
-			this.units = data?.data ? data.data : null
+			this.units = data?.data ? data.data : null;
 		},
 
 		onDoneUserGet({ data }) {
-			this.user = data?.data.length ? data.data[0] : null
+			this.user = data?.data.length ? data.data[0] : null;
 		},
 
 		onErrorSign(data) {
-			swal.fire('Erro de autenticação', data.message, 'error');
+			swal.fire("Erro de autenticação", data.message, "error");
 		},
 
 		onSubmitDeleteUser() {
 			swal.fire({
-				title: 'Deseja deletar o usuário?',
-				html: 'Após a deleção não será possível acessar a plataforma e seu histórico de ações será perdido',
+				title: "Deseja deletar o usuário?",
+				html: "Após a deleção não será possível acessar a plataforma e seu histórico de ações será perdido",
 				showDenyButton: true,
-				confirmButtonText: 'Deletar',
-				denyButtonText: 'Cancelar',
+				confirmButtonText: "Deletar",
+				denyButtonText: "Cancelar",
 			}).then((result) => {
 				if (result.isConfirmed) {
-					swal.fire('Usuário deletado', '', 'success');
+					swal.fire("Usuário deletado", "", "success");
 					this.$nextTick(() => {
 						this.logout();
 					});

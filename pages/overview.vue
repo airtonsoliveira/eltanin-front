@@ -72,16 +72,15 @@
 			<v-col cols="4">
 				<v-btn
 					block
-					color="#1E1E1E"
+					color="#555F9B"
 					class="text-none text-center white--text"
 					height="100px"
 					to="/invoiceInput"
 				>
-					<v-icon right large> mdi-receipt-text-plus </v-icon>
+					<v-icon right large> mdi-file-document-plus </v-icon>
 					<v-col> Adicionar nova Fatura </v-col>
 				</v-btn>
 			</v-col>
-			<v-spacer class="col-4"></v-spacer>
 			<v-col cols="4">
 				<v-btn
 					block
@@ -91,7 +90,19 @@
 					to="/unit"
 				>
 					<v-icon right large> mdi-home-plus </v-icon>
-					<v-col> Cadastrar nova UC/UG </v-col>
+					<v-col> Cadastrar nova Unidade </v-col>
+				</v-btn>
+			</v-col>
+			<v-col cols="4">
+				<v-btn
+					block
+					color="#05061D"
+					class="text-none text-center white--text"
+					height="100px"
+					to="/history"
+				>
+					<v-icon right large> mdi-clock </v-icon>
+					<v-col> Histórico de Faturas </v-col>
 				</v-btn>
 			</v-col>
 		</v-row>

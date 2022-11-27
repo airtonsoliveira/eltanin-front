@@ -31,7 +31,7 @@
 						<v-row justify="center">
 							<v-col cols="10">
 								<v-text-field
-									background-color="#fff"
+									backgroundColor="#fff"
 									outlined
 									label="Nome Completo"
 									v-model="formData.name"
@@ -41,7 +41,7 @@
 						<v-row justify="center">
 							<v-col cols="10">
 								<v-text-field
-									background-color="#fff"
+									backgroundColor="#fff"
 									outlined
 									label="E-mail"
 									type="email"
@@ -53,7 +53,7 @@
 						<v-row justify="center">
 							<v-col cols="10">
 								<v-text-field
-									background-color="#fff"
+									backgroundColor="#fff"
 									outlined
 									label="Confirmação de e-mail"
 									v-model="formData.emailConfirm"
@@ -64,7 +64,7 @@
 						<v-row justify="center">
 							<v-col cols="10">
 								<v-text-field
-									background-color="#fff"
+									backgroundColor="#fff"
 									outlined
 									label="CPF/CNPJ"
 									type="text"
@@ -78,7 +78,7 @@
 							<v-col cols="10">
 								<v-text-field
 									outlined
-									background-color="#fff"
+									backgroundColor="#fff"
 									label="Senha"
 									v-model="formData.password"
 									:append-icon="
@@ -94,7 +94,7 @@
 							<v-col cols="10">
 								<v-text-field
 									outlined
-									background-color="#fff"
+									backgroundColor="#fff"
 									label="Confirmar Senha"
 									v-model="formData.passwordConfirm"
 									v-if="!loggedIn"

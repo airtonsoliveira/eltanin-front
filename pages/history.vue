@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-row class="mx-n14" style="background-color: #087890">
+		<v-row class="mx-n14" style="backgroundColor: #087890">
 			<v-col class="pl-14 white--text"> Histórico de Faturas </v-col>
 		</v-row>
 		<v-row align="center" class="pb-2">

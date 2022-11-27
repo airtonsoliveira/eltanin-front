@@ -55,10 +55,8 @@
 </template>
 
 <script>
-import store from "@/store/index.js";
-
 export default {
-	name: "DefaultLayout",
+	name: 'DefaultLayout',
 	data() {
 		return {
 			clipped: false,
@@ -66,41 +64,41 @@ export default {
 			fixed: false,
 			pagesShowed: [
 				{
-					icon: "mdi-apps",
-					title: "Bem-vindo",
-					path: "/",
+					icon: 'mdi-account',
+					title: 'Início',
+					path: '/',
 				},
 			],
 			pages: [
 				{
-					icon: "mdi-apps",
-					title: "Bem-vindo",
-					path: "/",
+					icon: 'mdi-account',
+					title: 'Início',
+					path: '/',
 				},
 				{
-					icon: "mdi-cube",
-					title: "Visão Geral",
-					path: "/overview",
+					icon: 'mdi-cube',
+					title: 'Visão Geral',
+					path: '/overview',
 				},
 				{
-					icon: "mdi-clock",
-					title: "Histórico",
-					path: "/history",
+					icon: 'mdi-clock',
+					title: 'Histórico',
+					path: '/history',
 				},
 				{
-					icon: "mdi-home-plus",
-					title: "Nova unidade",
-					path: "/unit",
+					icon: 'mdi-home-plus',
+					title: 'Nova unidade',
+					path: '/unit',
 				},
 				{
-					icon: "mdi-receipt-text-plus",
-					title: "Nova fatura",
-					path: "/invoiceInput",
+					icon: 'mdi-file-document-plus',
+					title: 'Nova fatura',
+					path: '/invoiceInput',
 				},
 			],
 			miniVariant: false,
 			right: true,
-			title: "Eltanin Energia",
+			title: 'Eltanin Energia',
 		};
 	},
 

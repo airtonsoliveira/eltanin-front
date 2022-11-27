@@ -1,35 +1,45 @@
 <template>
 	<div>
+		<ApiInvoiceGetById
+			manualSubmit
+			ref="apiInvoiceGet"
+			:id="invoiceId"
+			@done="onDoneInvoiceGet"
+		/>
+		<ApiInvoicePut
+			manualSubmit
+			ref="apiInvoicePut"
+			:id="invoiceId"
+			:variables="formData"
+			@done="onDoneInvoicePut"
+			@error="onErrorInvoicePut"
+		/>
+		<ApiInvoicePost
+			manualSubmit
+			ref="apiInvoicePost"
+			:variables="formData"
+			@done="onDoneInvoicePost"
+			@error="onErrorInvoicePost"
+		/>
 		<v-row class="mx-n14" style="backgroundColor: #087890">
-			<v-col class="pl-14 white--text"> Adicionar nova fatura </v-col>
+			<v-col v-if="invoice" class="pl-14 white--text">
+				Edição de fatura
+			</v-col>
+			<v-col v-else class="pl-14 white--text">
+				Adicionar nova fatura
+			</v-col>
 		</v-row>
 		<v-row>
-			<v-col>
-				<v-select
-					hide-details
-					solo
-					itemText="name"
-					itemValue="value"
-					label="Unidade"
-					:items="optionsUnit"
-				>
-				</v-select>
+			<v-col class="mt-4">
+				<VSelectUnit hide-details v-model="formData.unitId"/>
 			</v-col>
 		</v-row>
 		<v-row>
 			<v-col>
-				<v-select
-					hide-details
-					solo
-					itemText="text"
-					itemValue="value"
-					label="Distribuidora"
-					:items="optionsDistributor"
-				>
-				</v-select>
+				<VSelectDistributor hide-details v-model="formData.distributorId"/>
 			</v-col>
 		</v-row>
-		<v-row>
+		<v-row class="pb-4">
 			<v-col cols="6">
 				<v-select
 					hide-details
@@ -38,6 +48,7 @@
 					itemValue="value"
 					label="Mês Referência"
 					:items="months"
+					v-model="month"
 				>
 				</v-select>
 			</v-col>
@@ -49,22 +60,73 @@
 					itemValue="value"
 					label="Ano Referência"
 					:items="years"
+					v-model="year"
 				>
 				</v-select>
 			</v-col>
 		</v-row>
-        <v-row>
-			<v-col>
-				<v-file-input
-					solo
-					label="PDF da fatura"
-				>
-				</v-file-input>
-			</v-col>
-		</v-row>
+		<v-switch v-show="!invoiceId"
+			v-model="uploadSwitch"
+			label="Leitura automática"
+		></v-switch>
+		<div v-if="uploadSwitch && !invoiceId">
+			<v-row>
+				<v-col> Anexar PDF da fatura </v-col>
+			</v-row>
+			<v-divider class="pt-2 pb-6"></v-divider>
+			<v-row>
+				<v-col class="py-0">
+					<v-file-input
+						solo
+						label="PDF da fatura"
+						v-model="file"
+						@change="uploadFile"
+					/>
+				</v-col>
+			</v-row>
+		</div>
+		<div v-else>
+			<v-row>
+				<v-col> Itens da Fatura </v-col>
+			</v-row>
+			<v-divider class="pt-2 pb-6"></v-divider>
+			<v-row v-for="(item, index) in items" :key="index">
+				<v-col class="py-0" cols="7">
+					<VAutocompleteItemType hide-details v-model="formData.items[index].type"/>
+				</v-col>
+				<v-col class="py-0" cols="4">
+					<v-text-field
+						solo
+						label="Valor"
+						placeholder="Valor"
+						v-model="formData.items[index].value"
+					></v-text-field>
+				</v-col>
+				<v-col class="pt-1">
+					<v-btn
+						icon
+						color="error"
+						@click="formData.items.splice(index, 1)"
+					>
+						<v-icon>
+							mdi-delete-outline
+						</v-icon>
+					</v-btn>
+				</v-col>
+			</v-row>
+			<v-row>
+				<v-col class="pt-0">
+					<v-btn fab small dark color="#087890" @click="insertItem">
+						<v-icon dark>
+							mdi-plus
+						</v-icon>
+					</v-btn>
+				</v-col>
+			</v-row>
+		</div>
 		<v-row>
 			<v-col align="end">
-				<v-btn dark color="#034a59"> Concluir </v-btn>
+				<v-btn dark color="#034a59" @click="onSubmit"> Concluir </v-btn>
 			</v-col>
 		</v-row>
 	</div>
@@ -72,70 +134,35 @@
 
 <script>
 import { formatDateExtended } from '@/util/util';
+import Swal from 'sweetalert2'
+
+const initFormData = {
+	unitId: null,
+	distributorId: null,
+	referenceMonth: null,
+	items: [],
+	file: null
+}
+
+const initItemList = {
+	type: null,
+	value: null
+}
+
 export default {
-	name: 'InvoicePage',
+	name: 'InvoiceInputPage',
 
 	middleware: 'authenticated',
 
 	data() {
 		return {
-			mensagem: 'Nada',
-			pathMonth: null,
-			tab: 0,
-			optionsDistributor: [
-				{
-					text: 'Enel',
-					value: 1,
-				},
-				{
-					text: 'Energisa',
-					value: 2,
-				},
-			],
-            optionsUnit: [
-				{
-					type: 'UC',
-					name: 'Pedro X',
-				},
-				{
-					type: 'UG',
-					name: 'Consorcio X',
-				},
-                {
-					type: 'UC',
-					name: 'Unidade teste',
-				},
-			],
-			optionsUnitType: [
-				{
-					text: 'UC',
-					value: 1,
-				},
-				{
-					text: 'UG',
-					value: 2,
-				},
-			],
-			optionsUF: [
-				{
-					text: 'SP',
-					value: 1,
-				},
-				{
-					text: 'MG',
-					value: 2,
-				},
-			],
-			ucData: [
-				{
-					name: 'Nº instalação',
-					value: '940259574',
-				},
-				{
-					name: 'Início vigência',
-					value: '01/10/2022',
-				},
-			],
+			file: null,
+			invoice: null,
+			invoiceId: null,
+			uploadSwitch: true,
+			month: null,
+			year: null,
+			formData: Object.assign({}, initFormData),
             months: [
                 {
                     value: 1,
@@ -210,7 +237,12 @@ export default {
 		$route: {
 			immediate: true,
 			handler(val) {
-				this.pathMonth = val.query.month;
+				if (val.params.invoiceId) {
+					this.invoiceId = String(val.params.invoiceId);
+					this.$nextTick(() => {
+						this.$refs.apiInvoiceGet?.submit();
+					});
+				}
 			},
 		},
 	},
@@ -223,10 +255,83 @@ export default {
 			});
 			return selectedMonth[0];
 		},
+
+		items() {
+			return this.formData.items
+		}
 	},
 
 	methods: {
 		formatDateExtended,
+
+		insertItem() {
+			const list = Object.assign({}, initItemList)
+			this.formData.items.push(list)
+		},
+
+		onSubmit() {
+			this.formData.referenceMonth = 100*this.year + this.month
+			if (Number(this.invoiceId)) {
+				this.$nextTick(() => {
+					this.$refs.apiInvoicePut?.submit()
+				})
+			} else {
+				this.$nextTick(() => {
+					this.$refs.apiInvoicePost?.submit()
+				})
+			}
+			
+		},
+
+		onDoneInvoiceGet({ data }) {
+			this.invoice = data?.data.length ? data.data[0] : null;
+
+			if (this.invoice) {
+				this.formData = {
+					...this.formData,
+					unitId: this.invoice.unitId,
+					distributorId: this.invoice.distributorId,
+					referenceMonth: this.invoice.referenceMonth,
+					items: this.invoice.items,
+					file: this.invoice.file
+				};
+			}
+
+			this.year = Math.trunc(this.invoice.referenceMonth/100)
+			this.month = this.invoice.referenceMonth%100
+
+			this.file = this.invoice.file
+
+		},
+
+		onDoneInvoicePost() {
+			Swal.fire("Sucesso", "Fatura adicionada", "success");
+		},
+
+		onErrorInvoicePost() {
+			Swal.fire("Erro", "Erro ao adicionar fatura", "error");
+		},
+
+		onDoneInvoicePut() {
+			Swal.fire("Sucesso", "Fatura editada", "success");
+		},
+
+		onErrorInvoicePut() {
+			Swal.fire("Erro", "Erro ao editar fatura", "error");
+		},
+
+		async uploadFile(data) {
+			const readFile = (dataBlob) => {
+				return new Promise((resolve, reject) => {
+					const reader = new FileReader()
+					reader.onloadend = () => resolve(reader.result)
+					reader.readAsBinaryString(dataBlob)
+				})
+			}
+
+			const pdfFile = await readFile(this.file)
+			this.formData.file = pdfFile
+		},
 	},
 };
 </script>

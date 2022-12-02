@@ -140,7 +140,44 @@ const initFormData = {
 	unitId: null,
 	distributorId: null,
 	referenceMonth: null,
-	items: [],
+	items: [
+		{
+			type: 6,
+			value: null
+		},
+		{
+			type: 7,
+			value: null
+		},
+		{
+			type: 8,
+			value: null
+		},
+		{
+			type: 9,
+			value: null
+		},
+		{
+			type: 13,
+			value: null
+		},
+		{
+			type: 21,
+			value: null
+		},
+		{
+			type: 22,
+			value: null
+		},
+		{
+			type: 25,
+			value: null
+		},
+		{
+			type: 37,
+			value: null
+		}
+	],
 	file: null
 }
 

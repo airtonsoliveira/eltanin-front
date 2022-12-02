@@ -188,7 +188,7 @@ export default {
 			file: null,
 			invoice: null,
 			invoiceId: null,
-			uploadSwitch: true,
+			uploadSwitch: false,
 			month: null,
 			year: null,
 			formData: Object.assign({}, initFormData),

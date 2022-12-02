@@ -142,14 +142,6 @@ const initFormData = {
 	referenceMonth: null,
 	items: [
 		{
-			type: 6,
-			value: null
-		},
-		{
-			type: 7,
-			value: null
-		},
-		{
 			type: 8,
 			value: null
 		},

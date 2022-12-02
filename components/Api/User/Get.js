@@ -8,6 +8,6 @@ export default Vue.extend({
     mixins: [AxiosGetMixin],
 
     created() {
-        this.url = 'http://localhost:5500/user'
+        this.url = 'https://eltanin-api-production.up.railway.app/user'
     }
 })

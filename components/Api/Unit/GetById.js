@@ -19,7 +19,7 @@ export default Vue.extend({
             immediate: true,
             handler(val) {
                 if(val) {
-                    this.url = `http://localhost:5500/unit/${val}`
+                    this.url = `https://eltanin-api-production.up.railway.app/unit/${val}`
                 }
             }
         }

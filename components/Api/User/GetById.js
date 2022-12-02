@@ -16,6 +16,6 @@ export default Vue.extend({
 
     created() {
         const idUser = this.$store.state.idUser
-        this.url = `http://localhost:5500/user/${idUser}`
+        this.url = `https://eltanin-api-production.up.railway.app/user/${idUser}`
     }
 })

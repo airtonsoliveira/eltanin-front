@@ -18,7 +18,7 @@ export default Vue.extend({
         id: { 
             immediate: false,
             handler(val) {
-                this.url = `http://localhost:5500/critique/${val}`
+                this.url = `https://eltanin-api-production.up.railway.app/critique/${val}`
             }
         }
     }

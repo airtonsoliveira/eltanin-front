@@ -174,7 +174,7 @@ const initFormData = {
 			value: null
 		},
 		{
-			type: 37,
+			type: 38,
 			value: null
 		}
 	],

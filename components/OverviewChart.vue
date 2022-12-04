@@ -101,9 +101,6 @@ export default {
             this.invoices.forEach((invoice) => {
                 const index = this.yearMonths.findIndex((yearMonth) => yearMonth === invoice.referenceMonth)
 
-                invoice.injected += 100
-                invoice.consumed += 150
-
                 const exceeded = invoice.injected >= invoice.consumed
 
                 const generated = exceeded ? invoice.injected - invoice.consumed : 0

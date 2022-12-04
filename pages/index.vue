@@ -117,19 +117,9 @@
 							<v-icon> mdi-account-edit-outline </v-icon>
 						</v-btn>
 					</v-col>
-					<v-col align-self="center" cols="1">
+					<v-col align-self="center" class="mr-10" cols="1">
 						<v-btn icon dense color="#041D4E" @click="logout">
 							<v-icon> mdi-logout-variant </v-icon>
-						</v-btn>
-					</v-col>
-					<v-col align-self="center" class="mr-4" cols="1">
-						<v-btn
-							icon
-							dense
-							color="error"
-							@click="onSubmitDeleteUser"
-						>
-							<v-icon> mdi-delete-outline </v-icon>
 						</v-btn>
 					</v-col>
 				</v-row>

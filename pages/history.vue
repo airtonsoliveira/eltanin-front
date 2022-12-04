@@ -61,8 +61,8 @@
 								<InvoiceChart
 									horizontal
 									height="200"
-									:consumed="invoice.consumed + 150"
-									:injected="invoice.injected + 100"
+									:consumed="invoice.consumed"
+									:injected="invoice.injected"
 								/>
 							</v-col>
 						</v-row>

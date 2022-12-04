@@ -95,10 +95,10 @@
 											<InvoiceChart
 												height="250"
 												:consumed="
-													invoice.consumed + 150
+													invoice.consumed
 												"
 												:injected="
-													invoice.injected + 100
+													invoice.injected
 												"
 											/>
 										</v-col>
@@ -110,31 +110,36 @@
 				</v-col>
 				<v-col cols="8">
 					<v-card class="pa-2" height="300px">
+						<ApiCritiqueGetEvaluate
+							ref="apiCritiqueGetEvaluate"
+							:id="String(invoice.id)"
+							@done="onDoneCritiqueGetEvaluate"
+						/>
 						<v-row
 							class="ma-n2 text-center"
 							style="backgroundColor: #d9d9d9"
 						>
 							<v-col cols="6">
-								Análises com Problema (0/4)
+								Análises com Problema
 							</v-col>
 							<v-divider vertical></v-divider>
 							<v-col cols="6">
-								Análises sem Problema (4/4)
+								Análises sem Problema
 							</v-col>
 						</v-row>
 						<v-row class="mt-2">
 							<v-col cols="6" style="height: 250px; overflow-y: auto">
-								<v-row v-for="rule in []" :key="rule">
-									<v-col class="py-1 text-center">
-										{{ rule }}
+								<v-row v-for="critique in critiqueDivergent" :key="critique.type">
+									<v-col class="py-2 text-center red--text">
+										{{ critique.name }}
 									</v-col>
 								</v-row>
 							</v-col>
 							<v-divider vertical></v-divider>
 							<v-col cols="6" style="height: 250px; overflow-y: auto">
-								<v-row v-for="rule in rules" :key="rule">
-									<v-col class="py-2 text-center">
-										{{ rule }}
+								<v-row v-for="critique in critiqueValidated" :key="critique.type">
+									<v-col class="py-2 text-center blue--text">
+										{{ critique.name }}
 									</v-col>
 								</v-row>
 							</v-col>
@@ -181,11 +186,11 @@
 								</v-row>
 							</v-col>
 							<v-col v-if="tab == 0" cols="10">
-								<v-row align="center" class="text-center">
+								<v-row class="text-center" style="height: 260px; overflow-y: auto">
 									<v-col
 										cols="3"
 										style="height: 130px"
-										v-for="item in invoiceData"
+										v-for="item in invoice.items"
 										:key="item.name"
 									>
 										<v-row class="pt-4 text-center">
@@ -208,7 +213,7 @@
 								</v-row>
 							</v-col>
 							<v-col v-if="tab == 1" cols="10">
-								<v-row align="center" class="text-center">
+								<v-row class="text-center" style="height: 260px; overflow-y: auto">
 									<v-col
 										cols="3"
 										style="height: 130px"
@@ -278,16 +283,10 @@
 								color="#05061D"
 								class="text-none text-center title"
 								height="72px"
-								@click="
-									redirect('/invoice', {
-										invoiceId: invoice.id,
-									})
-								"
+								@click="redirect('/history')"
 							>
-								<v-icon large right>
-									mdi-file-document-check
-								</v-icon>
-								<v-col> Analisar </v-col>
+								<v-icon large right> mdi-clock </v-icon>
+								<v-col> Histórico </v-col>
 							</v-btn>
 						</v-col>
 					</v-row>
@@ -324,6 +323,9 @@ export default {
 				"Injeção maior que consumo, porém o saldo de créditos não aumentou.",
 				"Energia consumida não compensada, apesar de injeção ou créditos.",
 			],
+			critiqueValidated: [],
+			critiqueDivergent: [],
+			critiqueNotEvaluated: []
 		};
 	},
 
@@ -334,10 +336,6 @@ export default {
 
 		invoiceData() {
 			return [
-				{
-					name: "Distribuidora",
-					value: this.distributor ? this.distributor.name : null,
-				},
 				{
 					name: "Data de Vencimento",
 					value: this.invoice
@@ -363,6 +361,10 @@ export default {
 					name: "Nº instalação",
 					value: this.unit ? this.unit.code : null,
 				},
+				{
+					name: "Distribuidora",
+					value: this.distributor ? this.distributor.name : null,
+				}
 			];
 		},
 	},
@@ -382,6 +384,12 @@ export default {
 
 		onDoneInvoiceGet({ data }) {
 			this.invoice = data?.data.length ? data.data[0] : null;
+		},
+
+		onDoneCritiqueGetEvaluate({ data }) {
+			this.critiqueValidated = data?.data?.filter((critique) => critique.status === 0)
+			this.critiqueDivergent = data?.data?.filter((critique) => critique.status === 1)
+			this.critiqueNotEvaluated = data?.data?.filter((critique) => critique.status === 2)
 		},
 
 		onDoneDistributorGet({ data }) {

@@ -21,7 +21,7 @@ export default {
             let response
 
             try {
-                response = await this.$axios.get(this.url, { params: this.variables })
+                response = await this.$axios.get(this.urlProxy(this.url), { params: this.variables })
 
                 this.response = response
                 this.data = response && response.data

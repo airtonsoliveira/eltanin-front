@@ -12,6 +12,7 @@ export default Vue.extend({
 
             try {
                 response = await this.$axios.post(this.urlProxy(this.url), this.variables)
+
                 this.response = response
                 this.data = response && response.data
                 this.loading = false

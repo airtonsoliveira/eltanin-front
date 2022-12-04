@@ -1,4 +1,5 @@
 import Vue from 'vue'
+
 import AxiosBaseMixin from './base.js'
 
 export default Vue.extend({

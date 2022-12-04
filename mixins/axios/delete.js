@@ -11,7 +11,7 @@ export default Vue.extend({
             let response
 
             try {
-                response = await this.$axios.delete(this.urlProxy(this.url), { params: this.variables })
+                response = await this.$axios.delete(this.urlProxy(this.url), this.variables)
 
                 this.response = response
                 this.data = response && response.data

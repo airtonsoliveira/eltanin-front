@@ -21,11 +21,35 @@
 			@done="onDoneInvoicePost"
 			@error="onErrorInvoicePost"
 		/>
-		<v-row class="mx-n14" style="backgroundColor: #087890">
-			<v-col v-if="invoice" class="pl-14 white--text">
+		<ApiInvoiceDelete
+			ref="apiInvoiceDelete"
+			:id="invoiceId"
+			@done="onDoneInvoiceDelete"
+			@error="onErrorInvoiceDelete"
+		/>
+		<v-row v-if="invoice" class="mx-n14" style="backgroundColor: #087890">
+			<v-col class="pl-14 white--text">
 				Edição de fatura
 			</v-col>
-			<v-col v-else class="pl-14 white--text">
+			<v-col class="mr-10" cols="3">
+				<v-btn
+					small
+					color="#fff"
+					@click="$router.push(`/invoice?id=${invoice.id}`)"
+				>
+					Resumo da fatura
+				</v-btn>
+				<v-btn
+					small
+					color="error"
+					@click="onClickDelete"
+				>
+					Deletar
+				</v-btn>
+			</v-col>
+		</v-row>
+		<v-row v-else class="mx-n14" style="backgroundColor: #087890">
+			<v-col class="pl-14 white--text">
 				Adicionar nova fatura
 			</v-col>
 		</v-row>
@@ -309,7 +333,29 @@ export default {
 					this.$refs.apiInvoicePost?.submit()
 				})
 			}
-			
+		},
+
+		onClickDelete() {
+			Swal.fire({
+				title: "Deseja deletar a fatura?",
+				html: "Após a deleção não será possível visualizar ou acessar a fatura",
+				showDenyButton: true,
+				confirmButtonText: "Deletar",
+				denyButtonText: "Cancelar",
+			}).then((result) => {
+				if (result.isConfirmed) {
+					this.$refs.apiInvoiceDelete?.submit()
+				}
+			});
+		},
+
+		onDoneInvoiceDelete() {
+			Swal.fire("Sucesso", "Fatura deletada", "success");
+			this.$router.push('/history')
+		},
+
+		onErrorInvoiceDelete() {
+			Swal.fire("Erro", "Erro ao deletar a fatura", "error");
 		},
 
 		onDoneInvoiceGet({ data }) {

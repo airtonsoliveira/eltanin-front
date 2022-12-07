@@ -131,7 +131,7 @@
 							<v-col cols="6" style="height: 250px; overflow-y: auto">
 								<v-row v-for="critique in critiqueDivergent" :key="critique.type">
 									<v-col class="py-2 text-center red--text">
-										{{ critique.name }}
+										{{ critique.errorMessage }}
 									</v-col>
 								</v-row>
 							</v-col>
@@ -139,7 +139,7 @@
 							<v-col cols="6" style="height: 250px; overflow-y: auto">
 								<v-row v-for="critique in critiqueValidated" :key="critique.type">
 									<v-col class="py-2 text-center blue--text">
-										{{ critique.name }}
+										{{ critique.successMessage }}
 									</v-col>
 								</v-row>
 							</v-col>

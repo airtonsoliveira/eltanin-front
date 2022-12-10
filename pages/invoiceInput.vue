@@ -25,6 +25,8 @@
 			manualSubmit
 			ref="apiInvoiceCapture"
 			:variables="formData"
+			@done="onDoneInvoiceCapture"
+			@error="onErrorInvoiceCapture"
 		></ApiInvoiceCapture>
 		<ApiInvoiceDelete
 			ref="apiInvoiceDelete"
@@ -114,14 +116,26 @@
 				</v-col>
 			</v-row>
 		</div>
-		<div v-else>
+		<div v-if="!uploadSwitch || captured">
+			<ApiItemTypeGet
+				ref="apiItemTypeGet"
+				@done="onDoneItemTypeGet"
+			/>
 			<v-row>
 				<v-col> Itens da Fatura </v-col>
 			</v-row>
 			<v-divider class="pt-2 pb-6"></v-divider>
 			<v-row v-for="(item, index) in items" :key="index">
 				<v-col class="py-0" cols="7">
-					<VAutocompleteItemType hide-details v-model="formData.items[index].type"/>
+					<v-autocomplete
+						hide-details
+						solo
+						label='Item da fatura'
+						itemText='name'
+						itemValue='id'
+						v-model="formData.items[index].type"
+						:items="itemOptions"
+					/>
 				</v-col>
 				<v-col class="py-0" cols="4">
 					<v-text-field
@@ -155,7 +169,7 @@
 		</div>
 		<v-row>
 			<v-col align="end">
-				<v-btn dark color="#034a59" @click="onSubmit"> Concluir </v-btn>
+				<v-btn dark color="#034a59" :loading="loading" @click="() => {loading=true; onSubmit()}"> Concluir </v-btn>
 			</v-col>
 		</v-row>
 	</div>
@@ -218,8 +232,11 @@ export default {
 			invoice: null,
 			invoiceId: null,
 			uploadSwitch: false,
+			captured: false,
+			loading: false,
 			month: null,
 			year: null,
+			itemOptions: [],
 			formData: Object.assign({}, initFormData),
             months: [
                 {
@@ -329,15 +346,18 @@ export default {
 
 		onSubmit() {
 			this.formData.referenceMonth = 100*this.year + this.month
-			this.$refs.apiInvoiceCapture?.submit()
-			if (Number(this.invoiceId)) {
-				this.$nextTick(() => {
-					this.$refs.apiInvoicePut?.submit()
-				})
+			if(this.uploadSwitch){
+				this.$refs.apiInvoiceCapture?.submit()
 			} else {
-				this.$nextTick(() => {
-					this.$refs.apiInvoicePost?.submit()
-				})
+				if (Number(this.invoiceId)) {
+					this.$nextTick(() => {
+						this.$refs.apiInvoicePut?.submit()
+					})
+				} else {
+					this.$nextTick(() => {
+						this.$refs.apiInvoicePost?.submit()
+					})
+				}
 			}
 		},
 
@@ -385,6 +405,35 @@ export default {
 
 		},
 
+		onDoneInvoiceCapture({ data }) {
+			if(data?.data.length) {
+				const items = data?.data.length ? data.data.filter(item => item.type) : []
+				this.formData.items = items.map((item) => {
+					return {
+						type: item.type,
+						value: String(item.value).includes(',') ? this.treatNumber(item.value) : item.value
+					}
+				})
+				this.captured = true
+				this.loading = false
+
+				if (Number(this.invoiceId)) {
+					this.$nextTick(() => {
+						this.$refs.apiInvoicePut?.submit()
+					})
+				} else {
+					this.$nextTick(() => {
+						this.$refs.apiInvoicePost?.submit()
+					})
+				}
+			}
+		},
+
+		onErrorInvoiceCapture() {
+			this.captured = false
+			Swal.fire("Erro", "Erro ao capturar fatura", "error");
+		},
+
 		onDoneInvoicePost() {
 			Swal.fire("Sucesso", "Fatura adicionada", "success");
 		},
@@ -399,6 +448,17 @@ export default {
 
 		onErrorInvoicePut() {
 			Swal.fire("Erro", "Erro ao editar fatura", "error");
+		},
+
+		onDoneItemTypeGet({ data }) {
+            this.itemOptions = data?.data ? data.data : []
+        },
+
+		treatNumber(value) {
+			let num = value.replace('.', '')
+			num = num.replace(',', '.')
+			num = Number(num) > 0 ? Number(num) : -Number(num)
+			return num
 		},
 
 		async uploadFile(data) {

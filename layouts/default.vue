@@ -68,6 +68,11 @@ export default {
 					title: 'Início',
 					path: '/',
 				},
+				{
+					icon: 'mdi-information',
+					title: 'Sobre',
+					path: '/about',
+				},
 			],
 			pages: [
 				{
@@ -94,6 +99,11 @@ export default {
 					icon: 'mdi-file-document-plus',
 					title: 'Nova fatura',
 					path: '/invoiceInput',
+				},
+				{
+					icon: 'mdi-information',
+					title: 'Sobre',
+					path: '/about',
 				},
 			],
 			miniVariant: false,

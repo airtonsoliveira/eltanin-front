@@ -33,13 +33,7 @@
 			fixed
 			app
 		>
-			<v-btn icon @click.stop="miniVariant = miniVariant">
-				<v-icon
-					>mdi-{{
-						`chevron-${!miniVariant ? "right" : "left"}`
-					}}</v-icon
-				>
-			</v-btn>
+			<img src="/dragon-removebg.png" width="3.5%"/>
 			<v-toolbar-title class="pl-4" v-text="title" />
 			<v-spacer />
 		</v-app-bar>

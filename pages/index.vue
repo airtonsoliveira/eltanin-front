@@ -11,8 +11,9 @@
 						</p>
 						<p>
 							Em caso de dúvidas sobre essas normas ou outras
-							indagações favor acessar a página de “Ajuda”.
+							indagações favor acessar a página <a href="/about">Sobre</a>
 						</p>
+						<img src="/dragon.png" width="40%"/>
 						<p>EQUIPE ELTANIN</p>
 						<p>Airton de Souza Oliveira</p>
 						<p>André Guarino de Almeida</p>

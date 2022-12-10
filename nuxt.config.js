@@ -5,8 +5,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - pasf-front',
-    title: 'pasf-front',
+    titleTemplate: '%s Energia',
+    title: 'Eltanin',
     htmlAttrs: {
       lang: 'en'
     },

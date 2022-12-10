@@ -21,6 +21,11 @@
 			@done="onDoneInvoicePost"
 			@error="onErrorInvoicePost"
 		/>
+		<ApiInvoiceCapture
+			manualSubmit
+			ref="apiInvoiceCapture"
+			:variables="formData"
+		></ApiInvoiceCapture>
 		<ApiInvoiceDelete
 			ref="apiInvoiceDelete"
 			:id="invoiceId"
@@ -324,6 +329,7 @@ export default {
 
 		onSubmit() {
 			this.formData.referenceMonth = 100*this.year + this.month
+			this.$refs.apiInvoiceCapture?.submit()
 			if (Number(this.invoiceId)) {
 				this.$nextTick(() => {
 					this.$refs.apiInvoicePut?.submit()
@@ -400,11 +406,11 @@ export default {
 				return new Promise((resolve, reject) => {
 					const reader = new FileReader()
 					reader.onloadend = () => resolve(reader.result)
-					reader.readAsBinaryString(dataBlob)
+					reader.readAsDataURL(dataBlob)
 				})
 			}
 
-			const pdfFile = await readFile(this.file)
+			const pdfFile = this.file ? await readFile(this.file) : null
 			this.formData.file = pdfFile
 		},
 	},

@@ -96,11 +96,11 @@
 				</v-select>
 			</v-col>
 		</v-row>
-		<v-switch v-show="!invoiceId"
+		<v-switch
 			v-model="uploadSwitch"
 			label="Leitura automática"
 		></v-switch>
-		<div v-if="uploadSwitch && !invoiceId">
+		<div v-if="uploadSwitch">
 			<v-row>
 				<v-col> Anexar PDF da fatura </v-col>
 			</v-row>
@@ -123,6 +123,10 @@
 			/>
 			<v-row>
 				<v-col> Itens da Fatura </v-col>
+				<v-col class="d-flex justify-end" v-if="captured">
+					Confira o resultado da captura
+					<v-icon right small color="black"> mdi-arrow-down </v-icon>
+				</v-col>
 			</v-row>
 			<v-divider class="pt-2 pb-6"></v-divider>
 			<v-row v-for="(item, index) in items" :key="index">
@@ -159,7 +163,7 @@
 			</v-row>
 			<v-row>
 				<v-col class="pt-0">
-					<v-btn fab small dark color="#087890" @click="insertItem">
+					<v-btn fab small dark color="#034a59" @click="insertItem">
 						<v-icon dark>
 							mdi-plus
 						</v-icon>
@@ -168,8 +172,11 @@
 			</v-row>
 		</div>
 		<v-row>
-			<v-col align="end">
-				<v-btn dark color="#034a59" :loading="loading" @click="() => {loading=true; onSubmit()}"> Concluir </v-btn>
+			<v-col class="d-flex justify-end" v-if="uploadSwitch && !captured">
+				<v-btn dark color="#034a59" :loading="loading" @click="onCapture"> Capturar </v-btn>
+			</v-col>
+			<v-col class="d-flex justify-end pr-16 pb-10" v-if="!uploadSwitch || captured">
+				<v-btn dark large color="#087890" :loading="loading" @click="onSubmit"> Concluir </v-btn>
 			</v-col>
 		</v-row>
 	</div>
@@ -344,20 +351,23 @@ export default {
 			this.formData.items.push(list)
 		},
 
+		onCapture() {
+			this.loading = true
+			this.$nextTick(() => {
+				this.$refs.apiInvoiceCapture?.submit()
+			})
+		},
+
 		onSubmit() {
 			this.formData.referenceMonth = 100*this.year + this.month
-			if(this.uploadSwitch){
-				this.$refs.apiInvoiceCapture?.submit()
+			if (Number(this.invoiceId)) {
+				this.$nextTick(() => {
+					this.$refs.apiInvoicePut?.submit()
+				})
 			} else {
-				if (Number(this.invoiceId)) {
-					this.$nextTick(() => {
-						this.$refs.apiInvoicePut?.submit()
-					})
-				} else {
-					this.$nextTick(() => {
-						this.$refs.apiInvoicePost?.submit()
-					})
-				}
+				this.$nextTick(() => {
+					this.$refs.apiInvoicePost?.submit()
+				})
 			}
 		},
 
@@ -416,16 +426,6 @@ export default {
 				})
 				this.captured = true
 				this.loading = false
-
-				if (Number(this.invoiceId)) {
-					this.$nextTick(() => {
-						this.$refs.apiInvoicePut?.submit()
-					})
-				} else {
-					this.$nextTick(() => {
-						this.$refs.apiInvoicePost?.submit()
-					})
-				}
 			}
 		},
 
@@ -472,6 +472,8 @@ export default {
 
 			const pdfFile = this.file ? await readFile(this.file) : null
 			this.formData.file = pdfFile
+			this.captured = false
+			this.formData.items = Object.assign([], initFormData.items)
 		},
 	},
 };

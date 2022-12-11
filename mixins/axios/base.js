@@ -29,7 +29,9 @@ export default {
 
     methods: {
         urlProxy(url) {
-            const local = false
+            let local
+            //local = true
+            local = false
             let newUrl = url
 
             if (url && local) newUrl = url.replace('https://eltanin-api-production.up.railway.app/', 'http://localhost:5500/')

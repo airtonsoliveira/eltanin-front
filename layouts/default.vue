@@ -43,7 +43,7 @@
 			</v-container>
 		</v-main>
 		<v-footer dark style="backgroundColor: #034a59" :absolute="false" app>
-			<span>&copy; {{ new Date().getFullYear() }}</span>
+			<span>{{ new Date().getFullYear() }}</span>
 		</v-footer>
 	</v-app>
 </template>

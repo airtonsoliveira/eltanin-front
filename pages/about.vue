@@ -93,22 +93,6 @@
 
 					<li>
 						<strong
-							>Custo de disponibilidade incompatível com a fase da
-							instalação</strong
-						><br />
-						RN Nº 687 24/11/2015 - Artigo 7º - inciso I
-					</li>
-
-					<li>
-						<strong
-							>Tarifa fora da faixa de cobrança
-							(bandeiras)</strong
-						><br />
-						RN Nº 687 24/11/2015 - Artigo 7º - parágrafo 2º
-					</li>
-
-					<li>
-						<strong
 							>Energia compensada com valor maior que energia
 							consumida</strong
 						><br />RN Nº 687 24/11/2015 - Artigo 2º - inciso III
@@ -162,14 +146,6 @@
 							não diminuiu ou era zero</strong
 						><br />
 						RN Nº 687 24/11/2015 - Artigo 7º - incisos IX, X, XII
-					</li>
-
-					<li>
-						<strong
-							>Energia injetada diverge de delta saldo menos
-							energia compensada em mais de 5% ou 100 kWh</strong
-						><br />
-						RN Nº 687 24/11/2015 - Artigo 7º - inciso III, IV
 					</li>
 
 					<li>

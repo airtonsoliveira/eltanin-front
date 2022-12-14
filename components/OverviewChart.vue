@@ -26,7 +26,7 @@ export default {
     },
 
     data: () => {
-        return {  
+        return {
             invoices: [],
             yearMonths: [],
             dataGrouped: [
@@ -95,8 +95,8 @@ export default {
         getLastYearMonths,
 
         onDoneInvoiceGet ({ data }) {
-            this.invoices = data?.data ? data.data : null,
-            this.yearMonths = getLastYearMonths(6)
+            this.invoices = data?.data ? data.data : [],
+            this.yearMonths = getLastYearMonths(6).reverse()
 
             this.invoices.forEach((invoice) => {
                 const index = this.yearMonths.findIndex((yearMonth) => yearMonth === invoice.referenceMonth)
